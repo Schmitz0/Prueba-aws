@@ -47,6 +47,12 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 //const { Videogame, Genre } = sequelize.models;
 
+const {RemitoProducto,Remito,Producto} = sequelize.models;
+
+
+Remito.belongsToMany(Producto, { through: RemitoProducto });
+Producto.belongsToMany(Remito, { through: RemitoProducto });
+
 //Videogame.belongsToMany(Genre, { through: 'Videogames_Genre' })
 //Genre.belongsToMany(Videogame, { through: 'Videogames_Genre' })
 
