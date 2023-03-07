@@ -18,9 +18,9 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
 
-    const { nombre, precio, stock } = req.body;
+    const { nombre, precio, stock , descripcion, proveedor, imgUrl, unidad, categoria} = req.body;
     try {
-      const producto = await Producto.create({ nombre, precio, stock });
+      const producto = await Producto.create({ nombre, precio, stock,descripcion, proveedor, imgUrl, unidad, categoria });
       res.json(producto);
     } catch (error) {
       console.error(error);
