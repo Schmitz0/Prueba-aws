@@ -32,12 +32,16 @@ router.get("/", async (req, res) => {
     //let total = 0;
     try {
       const remito = await Remito.create({ fecha });
-      for (const { id, cantidad } of productos) {
+      for (const { id, cantidad , precio} of productos) {
         const producto = await Producto.findByPk(id);
-        console.log(producto);
+        let quantity = producto.stock
         //total += producto.precio * cantidad;
         await remito.addProducto(producto, { through: { cantidad } });
-        await producto.decrement('stock', { by: cantidad });
+        //await producto.decrement('stock', { by: cantidad });
+        await producto.update({precio})
+        await producto.update({
+          stock: quantity + cantidad,
+        })
       }
       //await remito.update({ total });
       res.json(remito);
