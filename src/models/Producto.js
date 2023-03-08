@@ -16,11 +16,11 @@ module.exports = (sequelize) => {
       },
       precio: {
         type: DataTypes.FLOAT,
-        allowNull: false,
+        // allowNull: false,
       },
       stock: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        // allowNull: false,
       },
       categoria: {
         type: DataTypes.STRING,
@@ -29,7 +29,7 @@ module.exports = (sequelize) => {
       unidad: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        // unique: true,
       },
       descripcion: {
         type: DataTypes.STRING,
