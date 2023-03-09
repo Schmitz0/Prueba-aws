@@ -24,8 +24,5 @@ module.exports = (sequelize) => {
             defaultValue: "https://wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg",
         },
     },
-        {
-            paranoid: true,
-        }
     )
 }

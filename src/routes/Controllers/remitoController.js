@@ -28,25 +28,25 @@ router.get("/", async (req, res) => {
     }
 });
 
-  router.post("/", async (req, res) => {
-    const { fecha, productos, proveedorId } = req.body;
-    try {
-      const remito = await Remito.create({ fecha, proveedorId });
-      for (const { id, cantidad , precio } of productos) {
-        const producto = await Producto.findByPk(id);
-        let quantity = producto.stock
-        await remito.addProducto(producto, { through: { cantidad } });
-        await producto.update({precio})
-        await producto.update({
-          stock: quantity + cantidad,
-        })
-      }
-
-      res.json(remito);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Error al crear el remito');
+router.post("/", async (req, res) => {
+  const { fecha, productos, proveedorId } = req.body;
+  try {
+    const remito = await Remito.create({ fecha, proveedorId });
+    for (const { id, cantidad , precio } of productos) {
+      const producto = await Producto.findByPk(id);
+      let quantity = producto.stock
+      await remito.addProducto(producto, { through: { cantidad } });
+      await producto.update({precio})
+      await producto.update({
+        stock: quantity + cantidad,
+      })
     }
-  });
+
+    res.json(remito);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al crear el remito');
+  }
+});
 
 module.exports = router;
