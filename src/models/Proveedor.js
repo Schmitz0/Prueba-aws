@@ -1,12 +1,12 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    sequelize.define('users', {
-        firstname: {
+    sequelize.define('proveedor', {
+        nombre: {
             type: DataTypes.STRING(50),
             allowNull: false,
         },
-        lastname: {
+        apellido: {
             type: DataTypes.STRING(50),
             allowNull: false,
         },
@@ -15,20 +15,13 @@ module.exports = (sequelize) => {
           allowNull: false,
           unique: true,
         },
-        hashPassword: {
-            type: DataTypes.STRING,
-            allowNull: false,
+        descripcion:{
+            type:DataTypes.STRING,
         },
-        role: { 
-            type: DataTypes.STRING(15),
-            defaultValue: "User",
-        },
-        imgUrl:{
-            type: DataTypes.TEXT,
-        },
+        telefono: {
+            type: DataTypes.INTEGER,
+            allowNull:false,
+        }
     },
-    {
-      paranoid: true,
-    }
   )
 }
