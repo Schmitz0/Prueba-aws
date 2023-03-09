@@ -1,34 +1,31 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    sequelize.define('users', {
-        firstname: {
-            type: DataTypes.STRING(50),
-            allowNull: false,
-        },
-        lastname: {
-            type: DataTypes.STRING(50),
+    sequelize.define('usuario', {
+        name: {
+            type: DataTypes.STRING,
             allowNull: false,
         },
         email: {
-          type: DataTypes.STRING(30),
-          allowNull: false,
-          unique: true,
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
         },
         hashPassword: {
             type: DataTypes.STRING,
             allowNull: false,
         },
         role: { 
-            type: DataTypes.STRING(15),
+            type: DataTypes.STRING,
             defaultValue: "User",
         },
         imgUrl:{
             type: DataTypes.TEXT,
+            defaultValue: "https://wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg",
         },
     },
-    {
-      paranoid: true,
-    }
-  )
+        {
+            paranoid: true,
+        }
+    )
 }
