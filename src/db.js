@@ -6,29 +6,29 @@ const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT } = process.env;
 
 let sequelize = process.env.NODE_ENV === 'production'
   ? new Sequelize({
-      database: DB_NAME,
-      dialect: 'postgres',
-      host: DB_HOST,
-      port: DB_PORT,
-      username: DB_USER,
-      password: DB_PASSWORD,
-      pool: {
-        max: 3,
-        min: 1,
-        idle: 10000,
+    database: DB_NAME,
+    dialect: 'postgres',
+    host: DB_HOST,
+    port: DB_PORT,
+    username: DB_USER,
+    password: DB_PASSWORD,
+    pool: {
+      max: 3,
+      min: 1,
+      idle: 10000,
+    },
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
       },
-      dialectOptions: {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false,
-        },
       keepAlive: true,
-  },
-  ssl: true,
-}) : new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`, {
-  logging: false,
-  native: false, 
-});
+    },
+    ssl: true,
+  }) : new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`, {
+    logging: false,
+    native: false,
+  });
 
 const basename = path.basename(__filename);
 const modelDefiners = [];
@@ -47,16 +47,16 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 //const { Videogame, Genre } = sequelize.models;
 
-const {RemitoProducto,Remito,Producto} = sequelize.models;
+const { RemitoProducto, Remito, Producto, Proveedor } = sequelize.models;
 
 
 Remito.belongsToMany(Producto, { through: RemitoProducto });
 Producto.belongsToMany(Remito, { through: RemitoProducto });
 
-//Videogame.belongsToMany(Genre, { through: 'Videogames_Genre' })
-//Genre.belongsToMany(Videogame, { through: 'Videogames_Genre' })
+Proveedor.hasMany(Remito, { foreignKey: 'proveedorId' })
+Remito.belongsTo(Proveedor, { foreignKey: 'proveedorId' })
 
 module.exports = {
   ...sequelize.models,
-  conn: sequelize, 
+  conn: sequelize,
 };
