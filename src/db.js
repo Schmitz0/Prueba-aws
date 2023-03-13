@@ -63,6 +63,7 @@ Movimiento.belongsTo(Usuario)
 Usuario.hasMany(Movimiento)
 
 
+
 module.exports = {
   ...sequelize.models,
   conn: sequelize,

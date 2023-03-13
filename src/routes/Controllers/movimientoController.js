@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
           through: { attributes: ['cantidad','diferencia'] }
         },
       ],
-        order: [['date', 'DESC']]
+        order: [['createdAt', 'DESC']]
       });
       res.json(movimiento);
     } catch (error) {
@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { tipoDeMovimiento, productos, motivo ,date} = req.body;
+  const { tipoDeMovimiento, productos, motivo } = req.body;
   try {
     const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo , date });
     for (const { id, cantidad } of productos) {
