@@ -47,7 +47,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 //const { Videogame, Genre } = sequelize.models;
 
-const { RemitoProducto, Remito, Producto, Proveedor, Movimiento, Usuario } = sequelize.models;
+const { RemitoProducto, Remito, Producto, Proveedor, Movimiento, Usuario, MovimientoProducto} = sequelize.models;
 
 
 Remito.belongsToMany(Producto, { through: RemitoProducto });
@@ -56,8 +56,8 @@ Producto.belongsToMany(Remito, { through: RemitoProducto });
 Proveedor.hasMany(Remito, { foreignKey: 'proveedorId' });
 Remito.belongsTo(Proveedor, { foreignKey: 'proveedorId' });
 
-Movimiento.belongsToMany(Producto, { through: "movimientos_productos" })
-Producto.belongsToMany(Movimiento, { through: "movimientos_productos" })
+Movimiento.belongsToMany(Producto, { through: MovimientoProducto })
+Producto.belongsToMany(Movimiento, { through: MovimientoProducto })
 
 Movimiento.belongsTo(Usuario)
 Usuario.hasMany(Movimiento)

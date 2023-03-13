@@ -7,9 +7,9 @@ const userExtractor = require("./middleware/userExtractor.js");
 
 const router = Router();
 
-router.use("/producto", userExtractor, producto);
-router.use("/remito", userExtractor, remito);
-router.use("/login", userExtractor, login);
-router.use("/movimiento", userExtractor, movimiento);
+router.use("/producto", producto);
+router.use("/remito",  remito);
+router.use("/login",login);
+router.use("/movimiento",  movimiento);
 
 module.exports = router;
