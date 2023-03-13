@@ -52,7 +52,7 @@ const { RemitoProducto, Remito, Producto, Proveedor, Movimiento, Usuario, Movimi
 
 Remito.belongsToMany(Producto, { through: RemitoProducto });
 Producto.belongsToMany(Remito, { through: RemitoProducto });
-
+ 
 Proveedor.hasMany(Remito, { foreignKey: 'proveedorId' });
 Remito.belongsTo(Proveedor, { foreignKey: 'proveedorId' });
 

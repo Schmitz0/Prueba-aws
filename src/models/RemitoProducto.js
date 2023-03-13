@@ -4,14 +4,14 @@ const Producto = require('./Producto');
 
 
 module.exports = (sequelize) => {
-sequelize.define('RemitoProducto', {
-  cantidad: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  }
-}, {
-  tableName: 'remitos_productos'
-})
+  sequelize.define('RemitoProducto', {
+    cantidad: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
+  }, {
+    tableName: 'remitos_productos'
+  })
 };
 
 

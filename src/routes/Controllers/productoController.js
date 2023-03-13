@@ -47,5 +47,19 @@ router.put('/:id', async (req, res) => {
   }
 })
 
+router.delete('/:id', async (req, res) => {
+  try {
+      const { id } = req.params;
+      const productToDelete = await Producto.findByPk(id);
+      if (productToDelete) {
+          await productToDelete.destroy()
+          res.status(200).send(`El producto de id ${id} fue borrado con éxito`)
+      }
+  } catch (error) {
+      res.status(400).send(error.message)
+  }
+})
+
+
 
 module.exports = router;

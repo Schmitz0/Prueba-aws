@@ -67,7 +67,6 @@ router.post('/', async (req,res) => {
             userRole: newUser.role,
         })
     }
-
 })
 
 module.exports = router;
