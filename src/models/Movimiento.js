@@ -11,9 +11,6 @@ module.exports = (sequelize) => {
       cantidad: {
         type: DataTypes.INTEGER,
       },
-      diferencia: {
-        type: DataTypes.INTEGER,
-      },
       motivo: {
         type: DataTypes.STRING,
       },
