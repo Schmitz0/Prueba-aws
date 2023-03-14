@@ -4,24 +4,27 @@ module.exports = (sequelize) => {
     sequelize.define('proveedor', {
         nombre: {
             type: DataTypes.STRING(50),
-            allowNull: false,
+            // allowNull: false,
         },
-        apellido: {
+        nombreContacto: {
             type: DataTypes.STRING(50),
-            allowNull: false,
+            // allowNull: false,
         },
         email: {
           type: DataTypes.STRING(30),
-          allowNull: false,
-          unique: true,
+        //   allowNull: false,
+        //   unique: true,
         },
         descripcion:{
             type:DataTypes.STRING,
         },
         telefono: {
             type: DataTypes.INTEGER,
-            allowNull:false,
+            // allowNull:false,
         }
     },
+    {
+        paranoid: true
+    }
   )
 }

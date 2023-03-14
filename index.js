@@ -78,14 +78,24 @@ conn.sync({ force: true }).then(() => {
     ]
 
     const proveedores = [
-      {nombre: "Pedro", apellido: "Azucar", descripcion:"es dulce", email:"pedro@gmail.com", telefono:1165417871},
-      {nombre: "Jose", apellido: "sal", descripcion:"es dulce", email:"Jose@gmail.com", telefono:1165417871},
-      {nombre: "Laura", apellido: "higo", descripcion:"es dulce", email:"Laura@gmail.com", telefono:1165417871},
-      {nombre: "Pepe", apellido: "avion", descripcion:"es dulce", email:"Pepe@gmail.com", telefono:1165417871},
-      {nombre: "Lautaro", apellido: "coca", descripcion:"es dulce", email:"Lautaro@gmail.com", telefono:1165417871},
-      {nombre: "Josefina", apellido: "mana", descripcion:"es dulce", email:"Josefina@gmail.com", telefono:1165417871},
-      {nombre: "Pol", apellido: "vida", descripcion:"es dulce", email:"Pol@gmail.com", telefono:1165417871},
+      {nombre: "Cristalpet", nombreContacto: "", descripcion:"", email:"", telefono:0},
+      {nombre: "Hilosplásticos", nombreContacto: "", descripcion:"", email:"", telefono:0},
+      {nombre: "Linde", nombreContacto: "", descripcion:"", email:"", telefono:0},
+      {nombre: "Multiflex", nombreContacto: "", descripcion:"", email:"", telefono:0},
+      {nombre: "Nortesur", nombreContacto: "", descripcion:"", email:"", telefono:0},
+      {nombre: "Pamer", nombreContacto: "", descripcion:"", email:"", telefono:0},
+      {nombre: "Pandoplast", nombreContacto: "", descripcion:"", email:"", telefono:0},
+      {nombre: "RBS", nombreContacto: "", descripcion:"", email:"", telefono:0},
+      {nombre: "IMESI", nombreContacto: "", descripcion:"", email:"", telefono:0},
+      {nombre: "Ecoflex", nombreContacto: "", descripcion:"", email:"", telefono:0},
+      {nombre: "Percat", nombreContacto: "", descripcion:"", email:"", telefono:0},
     ]
+    
+    
+    
+    
+    
+    
 
     const usuario = [
       {name: "Gaston Schmitz", email: "gastonschmitz0@gmail.com", hashPassword: "$2b$08$/DFujLqVmZYc2qHWRdf.EuXZTLOlf2NzuL5ihfcJ0xkR/5vH7Fk/e",role: "Admin", imgUrl:"https://media.gettyimages.com/id/1292567082/es/foto/male-personal-trainer-sitting-on-weight-bench-after-training-client-finish-in-a-gym.jpg?s=2048x2048&w=gi&k=20&c=R9YVEJQyRcLTFX8sQsGpYwaOWzAcP1Z8D7iKv0Oxktc="},      //123
