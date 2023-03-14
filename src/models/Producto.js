@@ -24,20 +24,20 @@ module.exports = (sequelize) => {
       },
       categoria: {
         type: DataTypes.STRING,
-        allowNull: false,
+        //allowNull: false,
       },
       unidad: {
         type: DataTypes.STRING,
-        allowNull: false,
+        //allowNull: false,
         // unique: true,
       },
       descripcion: {
         type: DataTypes.STRING,
-        allowNull: false,
+        //allowNull: false,
       },
       proveedor: {
         type: DataTypes.STRING,
-        allowNull: false,
+        //allowNull: false,
       },
       imgUrl: {
         type: DataTypes.TEXT,

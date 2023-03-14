@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const { tipoDeMovimiento, productos, motivo } = req.body;
   try {
-    const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo , date });
+    const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
     for (const { id, cantidad } of productos) {
       const producto = await Producto.findByPk(id);
       let quantity = producto.stock
