@@ -53,46 +53,41 @@ router.post("/", async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
       const { id } = req.params;
-      const remitoABorrar = await Remito.findByPk(id);
-      console.log(remitoABorrar);
-      await remitoABorrar.destroy()
+      const remitoABorrar = await Remito.findByPk(id,{
+        include:[{
+          model:Producto,
+          attributes:["stock"],
+        }]
+      });
+
+
+      const aux = await RemitoProducto.findByPk(id)
+      const prod = remitoABorrar.Productos;
+
+      for (let i = 0; i < prod.length; i++) {
+
+        let prodId = prod[i].RemitoProducto.ProductoId;
+        let prodQuantity = prod[i].stock;
+
+        //asi es para llegar a los datos que necesitamos
+        //console.log(prod[i].RemitoProducto.ProductoId);
+        //console.log(prod[i].stock);
+
+        const producto = await Producto.findByPk(prodId);
+        let quantity = producto.stock
+        await producto.update({
+          stock: quantity - prodQuantity,
+        })
+
+        
+      }
+      
+      remitoABorrar.destroy();
       res.status(200).send(remitoABorrar)
   } catch (error) {
       res.status(400).send(error.message)
   }
 })
-// router.delete('/:id', async (req, res) => {
-//   try {
-//       const { id } = req.params;
-//       const remitoABorrar = await Remito.findByPk(id, {
-//         include:[{model: RemitoProducto}]
-//       });
-//       const {cantidad} = remitoABorrar; 
-//       console.log(remitoABorrar);
-//       if (remitoABorrar) {
-//           await remitoABorrar.destroy()
-//           console.log(id);
-//           // await RemitoProducto.destroy({
-//           //   where: {
-//           //     RemitoId: id
-//           //   }
-//           // })
-//           await Producto.update({
-//             stock: Sequelize.literal(`stock - ${cantidad}`)
-//           },{
-//             where: {
-//               id: {
-//                 [Sequelize.Op.in]: Sequelize.literal(
-//                   `(SELECT id FROM productos WHERE RemitoId = ${id})`
-//                 )
-//               }
-//             }
-//           })
-//           res.status(200).send(`El remito de id ${id} fue borrado con éxito`)
-//       }
-//   } catch (error) {
-//       res.status(400).send(error.message)
-//   }
-// })
+
 
 module.exports = router;
