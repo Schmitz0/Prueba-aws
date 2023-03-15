@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
         {
           model: Proveedor,
         }],
-        order: [['fecha', 'DESC']]
+        order: [['createdAt', 'DESC']]
       });
       res.json(remitos);
     } catch (error) {
@@ -30,10 +30,33 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.get("/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const remito = await Remito.findByPk(id, {
+        include: [{
+          model: Producto,
+          attributes: ['id', 'nombre', 'precio'],
+          through: { attributes: ['cantidad'] }
+        },
+        {
+          model: Proveedor,
+        }],
+        order: [['createdAt', 'DESC']]
+      });
+      
+      !remito ? res.status(404).send(`Remito ${id} no encontrado`):
+      res.json(remito);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Remito no encontrado');
+    }
+});
+
 router.post("/", async (req, res) => {
-  const { fecha, productos, proveedorId } = req.body;
+  const { productos, proveedorId } = req.body;
   try {
-    const remito = await Remito.create({ fecha, proveedorId });
+    const remito = await Remito.create({ proveedorId });
     for (const { id, cantidad , precio } of productos) {
       const producto = await Producto.findByPk(id);
       let quantity = producto.stock
@@ -53,15 +76,16 @@ router.post("/", async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
       const { id } = req.params;
-      const remitoABorrar = await Remito.findByPk(id,{
+      const remitoABorrar = await Remito.findByPk(id, {
         include:[{
           model:Producto,
           attributes:["stock"],
         }]
       });
 
-
-      const aux = await RemitoProducto.findByPk(id)
+      !remitoABorrar && res.status(400).send("El ID del remito no fue encontrado")
+      
+      // const aux = await RemitoProducto.findByPk(id)
       const prod = remitoABorrar.Productos;
 
       for (let i = 0; i < prod.length; i++) {
@@ -78,8 +102,6 @@ router.delete('/:id', async (req, res) => {
         await producto.update({
           stock: quantity - prodQuantity,
         })
-
-        
       }
       
       remitoABorrar.destroy();
@@ -88,6 +110,5 @@ router.delete('/:id', async (req, res) => {
       res.status(400).send(error.message)
   }
 })
-
 
 module.exports = router;

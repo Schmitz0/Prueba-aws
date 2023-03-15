@@ -8,10 +8,6 @@ module.exports = (sequelize) => {
       primaryKey: true,
       autoIncrement: true
     },
-    fecha: {
-      type: DataTypes.DATEONLY,
-      allowNull: false
-    },
   },
   {
     tableName: 'remitos'

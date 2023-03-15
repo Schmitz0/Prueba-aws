@@ -14,6 +14,19 @@ router.get("/", async (req, res) => {
       }
   }
 )
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+    try {
+      const productoId = await Producto.findByPk(id);
+      !productoId ?
+      res.status(400).send("El ID del producto no fue encontrado") :
+      res.status(200).send(productoId)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al obtener el producto solicitado');
+      }
+  }
+)
 
 router.post("/", async (req, res) => {
     const { nombre, precio, stock , descripcion, proveedor, imgUrl, unidad, categoria} = req.body;
