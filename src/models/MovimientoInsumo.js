@@ -7,7 +7,7 @@ module.exports = (sequelize) => {
 sequelize.define('MovimientoInsumo', {
   cantidad: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    // allowNull: false
   },
   diferencia: {
     type: DataTypes.INTEGER,
