@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
+
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT } = process.env;
 
 let sequelize = process.env.NODE_ENV === 'production'
@@ -47,7 +48,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 //const { Videogame, Genre } = sequelize.models;
 
-const { RemitoInsumo, Remito, Insumo, Proveedor, Movimiento, Usuario, MovimientoInsumo } = sequelize.models;
+const { RemitoInsumo, Remito, Insumo, Proveedor, Movimiento, Usuario, MovimientoInsumo, InsumoReceta,  Receta, RecetaMovimiento  } = sequelize.models;
 
 
 Remito.belongsToMany(Insumo, { through: RemitoInsumo });
@@ -58,6 +59,12 @@ Remito.belongsTo(Proveedor, { foreignKey: 'proveedorId' });
 
 Movimiento.belongsToMany(Insumo, { through: MovimientoInsumo })
 Insumo.belongsToMany(Movimiento, { through: MovimientoInsumo })
+
+Receta.belongsToMany (Insumo, {through : InsumoReceta })
+Insumo.belongsToMany (Receta, {through  : InsumoReceta})
+
+Receta.belongsToMany (Movimiento, {through : RecetaMovimiento})
+Movimiento.belongsToMany (Receta, {through : RecetaMovimiento})
 
 Movimiento.belongsTo(Usuario)
 Usuario.hasMany(Movimiento)
