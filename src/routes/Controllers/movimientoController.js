@@ -8,6 +8,26 @@ const { MovimientoInsumo } = require("../../db.js");
 
 const router = Router();
 
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const movimiento = await Movimiento.findByPk(id, {
+      include: [
+        {
+          model: Insumo,
+          attributes: ["id", "nombre"],
+          through: { attributes: ["cantidad", "diferencia"] },
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+    res.json(movimiento);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(`Error al obtener el movimiento ${id}`);
+  }
+});
+
 router.get("/", async (req, res) => {
   try {
     const movimiento = await Movimiento.findAll({
