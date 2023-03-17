@@ -8,6 +8,9 @@ module.exports = (sequelize) => {
         type: DataTypes.ENUM("Control de stock", "Movimiento de insumo","Receta"),
         allowNull: false,
       },
+      cantidadProducida:{
+        type : DataTypes.INTEGER       
+      },
       motivo: {
         type: DataTypes.STRING,
       },

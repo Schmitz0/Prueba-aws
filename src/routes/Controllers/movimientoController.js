@@ -2,9 +2,11 @@ const { Op } = require("sequelize");
 
 const { Router } = require("express");
 const { Insumo } = require("../../db.js");
-const { Usuario } = require("../../db.js");
+const { Receta} = require("../../db.js");
 const { Movimiento } = require("../../db.js");
+const {Insumos} = require("../../db.js");
 const { MovimientoInsumo } = require("../../db.js");
+
 
 const router = Router();
 
@@ -48,12 +50,9 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { tipoDeMovimiento, insumos, motivo } = req.body;
+  const { tipoDeMovimiento, insumos, motivo, cantidadProducida } = req.body;
   try {
-    if (
-      tipoDeMovimiento === "Movimiento de insumo" ||
-      tipoDeMovimiento === "Receta"
-    ) {
+    if (tipoDeMovimiento === "Movimiento de insumo") {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
       for (const { id, cantidad } of insumos) {
         const insumo = await Insumo.findByPk(id);
@@ -67,7 +66,33 @@ router.post("/", async (req, res) => {
       }
 
       res.json(movimiento);
-    } else {
+     } 
+     
+     if (tipoDeMovimiento === "Receta") {
+      const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
+      await movimiento.update ({cantidadProducida})
+      for (const { id, cantidad } of insumos) {
+        const inReceta = await Receta.findByPk (id, {include : [  {model: Insumo,
+          through: { attributes: ["cantidad", "costo", "costoPorBotella"] }, }]}  )
+        console.log(inReceta);
+
+        const insumo = await Insumo.findByPk(id);
+        let quantity = insumo.stock;
+        let cantidadTotal = cantidad * cantidadProducida
+        await movimiento.addInsumo(insumo, { through: { cantidadTotal } });
+       
+
+
+        await insumo.update({
+          stock: quantity - cantidadTotal,
+        });
+      }
+
+      res.json(movimiento);
+
+
+
+     } else {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
       for (const { id, cantidad } of insumos) {
         const insumo = await Insumo.findByPk(id);

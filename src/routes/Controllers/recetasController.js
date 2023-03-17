@@ -1,26 +1,74 @@
 const { Router } = require("express");
-const { Proveedor } = require("../../db.js");
+const { Receta } = require("../../db.js");
+const {Insumo} = require   ("../../db.js") 
+const {InsumoReceta} = require   ("../../db.js"); 
+const Movimiento = require("../../models/Movimiento.js");
+
+
 
 const router = Router();
 
-router.get("/", async (req, res) => {
-    // const { insumos, proveedorId } = req.body;
-    // try {
-    //   const remito = await Remito.create({ proveedorId });
-    //   for (const { id, cantidad, precio } of insumos) {
-    //     const insumo = await Insumo.findByPk(id);
-    //     let quantity = insumo.stock;
-    //     await remito.addInsumo(insumo, { through: { cantidad } });
-    //     await insumo.update({ precio });
-    //     await insumo.update({
-    //       stock: quantity + cantidad,
-    //     });
-    //   }
-    //   res.json(remito);
-    // } catch (error) {
-    //   console.error(error);
-    //   res.status(500).send("Error al crear el remito");
-    // }
+router.post("/", async (req, res) => {
+    const {name, insumos, cantidadProducida} = req.body;
+    try {
+      const receta = await Receta.create({ name });
+      for (const { id, cantidad, costo, costoPorBotella } of insumos) {
+        const insumo = await Insumo.findByPk(id);
+        let quantity = insumo.stock;
+        await receta.addInsumo(insumo, { through: { cantidad } });
+        await receta.addInsumo(insumo, { through: { costo } });
+        await receta.addInsumo(insumo, { through: { costoPorBotella } });
+        // await InsumoReceta.uptade({costo,  costoPorBotella})        
+        await insumo.update({
+          stock: quantity - cantidad,
+        });
+      }
+      
+
+
+      res.json(receta);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error al crear la receta");
+    }
   });
+
+
+
+//   router.get("/", async (req, res) => {
+//     try {
+//       const receta = await Receta.findAll({
+//         include: [{
+//           model: Insumo,
+//           attributes: ['id', 'nombre', 'precio'],
+//           through: { attributes: ['cantidad'] }
+//         },
+//         ],
+//         order: [["createdAt", "DESC"]],
+//       });
+//       res.json(receta);
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).send("Error al obtener los recetas");
+//     }
+//   });
+
+
+
+  router.get("/", async (req, res) => {
+
+    try {
+      const recetas = await Receta.findAll({
+        include: [{
+          model: Insumo,
+        }],
+        order: [['createdAt', 'DESC']]
+      });
+      res.json(recetas);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error al obtener las recetas');
+    }
+});
 
   module.exports = router;

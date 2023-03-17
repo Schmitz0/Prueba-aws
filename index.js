@@ -1,7 +1,7 @@
 require('dotenv').config();
 const server = require('./src/app.js');
 const { conn } = require('./src/db.js');
-const { Producto } = require('./src/db.js');
+const { Receta } = require('./src/db.js');
 const { Insumo } = require('./src/db.js');
 const { Proveedor } = require('./src/db.js');
 const { Usuario } = require("./src/db.js")
@@ -15,7 +15,7 @@ conn.sync({ force: true }).then(() => {
       // {nombre: "azucar", descripcion:"es dulce", proveedor: "Jorge Perez", unidad: "kg", categoria: "alimento", imgUrl: "https://quierocuidarme.dkv.es/sites/default/files/styles/article_teaser_big_630x360/public/2022-02/propiedades-del-azucar.jpg"},
       {categoria:"Alimentos", nombre:"ACIDO ASCORBICO", precio:9.2, proveedor:"LG", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Alimentos", nombre:"ACIDO CITRICO ANHIDRO", precio:4.2, proveedor:"LG", unidad:"", Descripcion:"", imgUrl:""},
-      {categoria:"Alimentos", nombre:"Acido Fosf�rico", precio:3.76, proveedor:"LG", unidad:"", Descripcion:"", imgUrl:""},
+      {categoria:"Alimentos", nombre:"Acido Fosfórico", precio:3.76, proveedor:"LG", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Alimentos", nombre:"AN CARAMELO 822227", precio:2, proveedor:"LG", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Alimentos", nombre:"AZUCAR INVERTIDO", precio:0.711, proveedor:"azucarlito", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Alimentos", nombre:"BENZOATO DE SODIO", precio:4.4, proveedor:"LG", unidad:"", Descripcion:"", imgUrl:""},
@@ -31,13 +31,13 @@ conn.sync({ force: true }).then(() => {
       {categoria:"Alimentos", nombre:"Colorante Caramelo F 75", precio:2, proveedor:"", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Alimentos", nombre:"Sabor Pomelo Givaudan", precio:29, proveedor:"Givaudan", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Alimentos", nombre:"Bitter Givaudan", precio:49.5, proveedor:"Givaudan", unidad:"", Descripcion:"", imgUrl:""},
-      {categoria:"Alimentos", nombre:"Sabor Lima Lim�n", precio:17, proveedor:"", unidad:"", Descripcion:"", imgUrl:""},
-      {categoria:"Alimentos", nombre:"Sabor Lim�n", precio:44.1, proveedor:"", unidad:"", Descripcion:"", imgUrl:""},
+      {categoria:"Alimentos", nombre:"Sabor Lima Limón", precio:17, proveedor:"", unidad:"", Descripcion:"", imgUrl:""},
+      {categoria:"Alimentos", nombre:"Sabor Limón", precio:44.1, proveedor:"", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Empaque", nombre:"ADHESIVO", precio:8.74, proveedor:"Percat", unidad:"", Descripcion:"", imgUrl:""},
-      {categoria:"Empaque", nombre:"CART�N FINO", precio:0.54, proveedor:"Pamer", unidad:"", Descripcion:"", imgUrl:""},
-      {categoria:"Empaque", nombre:"CART�N GRUESO", precio:0.92, proveedor:"Pamer", unidad:"", Descripcion:"", imgUrl:""},
-      {categoria:"Empaque", nombre:"ETIQUETA BID�N 6000", precio:0.0308, proveedor:"RBS", unidad:"", Descripcion:"", imgUrl:""},
-      {categoria:"Empaque", nombre:"ETIQUETA SIF�N 2000", precio:0.0079, proveedor:"Strong", unidad:"", Descripcion:"", imgUrl:""},
+      {categoria:"Empaque", nombre:"CARTÓN FINO", precio:0.54, proveedor:"Pamer", unidad:"", Descripcion:"", imgUrl:""},
+      {categoria:"Empaque", nombre:"CARTÓN GRUESO", precio:0.92, proveedor:"Pamer", unidad:"", Descripcion:"", imgUrl:""},
+      {categoria:"Empaque", nombre:"ETIQUETA BIDÓN 6000", precio:0.0308, proveedor:"RBS", unidad:"", Descripcion:"", imgUrl:""},
+      {categoria:"Empaque", nombre:"ETIQUETA SIFÓN 2000", precio:0.0079, proveedor:"Strong", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Empaque", nombre:"ETIQUETA AGUA 2000", precio:0.0055, proveedor:"Strong", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Empaque", nombre:"ETIQUETA AGUA 600", precio:0.00655, proveedor:"Ecoflex", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Empaque", nombre:"Etiqueta Net 2250", precio:0.0098, proveedor:"strong", unidad:"", Descripcion:"", imgUrl:""},
@@ -47,8 +47,8 @@ conn.sync({ force: true }).then(() => {
       {categoria:"Empaque", nombre:"STRECH BLANCO", precio:2.45, proveedor:"Dematte", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Envases", nombre:"ENVASE AGUA 2000", precio:0.168068459657702, proveedor:"Multiflex", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Envases", nombre:"ENVASE AGUA 600", precio:0.125061124694377, proveedor:"Multiflex", unidad:"", Descripcion:"", imgUrl:""},
-      {categoria:"Envases", nombre:"ENVASE BID�N SOPLADO", precio:0.447021869057321, proveedor:"Multiflex", unidad:"", Descripcion:"", imgUrl:""},
-      {categoria:"Envases", nombre:"ENVASE SIF�N", precio:0.204645476772616, proveedor:"Multiflex", unidad:"", Descripcion:"", imgUrl:""},
+      {categoria:"Envases", nombre:"ENVASE BIDÓN SOPLADO", precio:0.447021869057321, proveedor:"Multiflex", unidad:"", Descripcion:"", imgUrl:""},
+      {categoria:"Envases", nombre:"ENVASE SIFÓN", precio:0.204645476772616, proveedor:"Multiflex", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Envases", nombre:"PREFORMA 41 GR", precio:0.0848279039083207, proveedor:"Cristalpet", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Envases", nombre:"PREFORMA 19,5 GR", precio:0.0438103116019833, proveedor:"Cristalpet", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Envases", nombre:"PREFORMA 28 GR", precio:0.0598151312231475, proveedor:"Cristalpet", unidad:"", Descripcion:"", imgUrl:""},
@@ -58,11 +58,11 @@ conn.sync({ force: true }).then(() => {
       {categoria:"Envases", nombre:"PREFORMA 52,7 GR", precio:0.105051230046854, proveedor:"Cristalpet", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Envases", nombre:"PREFORMA 56 GR", precio:0.114738448867334, proveedor:"Cristalpet", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Envases", nombre:"PREFORMA 94GR", precio:0.194592490115113, proveedor:"Cristalpet", unidad:"", Descripcion:"", imgUrl:""},
-      {categoria:"Tapa", nombre:"ASA BID�N", precio:0.0387286063569682, proveedor:"Multiflex", unidad:"", Descripcion:"", imgUrl:""},
+      {categoria:"Tapa", nombre:"ASA BIDÓN", precio:0.0387286063569682, proveedor:"Multiflex", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Tapa", nombre:"CABEZAL SIFON", precio:0.175, proveedor:"Sides", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Tapa", nombre:"TAPA AMARILLA", precio:0.01282, proveedor:"Cristalpet", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Tapa", nombre:"TAPA AZUL", precio:0.01282, proveedor:"Cristalpet", unidad:"", Descripcion:"", imgUrl:""},
-      {categoria:"Tapa", nombre:"TAPA BI�N", precio:0.0264058679706601, proveedor:"Multiflex", unidad:"", Descripcion:"", imgUrl:""},
+      {categoria:"Tapa", nombre:"TAPA BIDÓN", precio:0.0264058679706601, proveedor:"Multiflex", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Tapa", nombre:"TAPA NARANJA", precio:0.01282, proveedor:"Cristalpet", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Tapa", nombre:"TAPA ROJA", precio:0.01282, proveedor:"Cristalpet", unidad:"", Descripcion:"", imgUrl:""},
       {categoria:"Tapa", nombre:"Tapa Verde", precio:0.01282, proveedor:"Cristalpet", unidad:"", Descripcion:"", imgUrl:""}
@@ -81,25 +81,30 @@ conn.sync({ force: true }).then(() => {
       {nombre: "Ecoflex", nombreContacto: "", descripcion:"", email:"", telefono:0},
       {nombre: "Percat", nombreContacto: "", descripcion:"", email:"", telefono:0},
     ]
-    
-    
-    
-    
-    
-    
-
+  
     const usuario = [
       {name: "Gaston Schmitz", email: "gastonschmitz0@gmail.com", hashPassword: "$2b$08$/DFujLqVmZYc2qHWRdf.EuXZTLOlf2NzuL5ihfcJ0xkR/5vH7Fk/e",role: "Admin", imgUrl:"https://media.gettyimages.com/id/1292567082/es/foto/male-personal-trainer-sitting-on-weight-bench-after-training-client-finish-in-a-gym.jpg?s=2048x2048&w=gi&k=20&c=R9YVEJQyRcLTFX8sQsGpYwaOWzAcP1Z8D7iKv0Oxktc="},      //123
       {name: "Pablo Lospennato", email: "yosoypxl@gmail.com", hashPassword: "$2b$08$THIWbid7F5iySlIs2yxPlOracC44cyVT.hWI0Z1k88h4/G8r9awae",role: "Admin", imgUrl:"https://media.gettyimages.com/id/1319635095/es/foto/despu%C3%A9s-de-terminar-con-el-uso-de-equipos-de-ejercicio-en-el-gimnasio-moderno-el-atleta-y-el.jpg?s=2048x2048&w=gi&k=20&c=S_S2Q65ekxuy1mlmadVYawIm0VqABDTGlAh5mWdJKbo="},           //asd123
-      {name: "Martin Galara", email: "martin@gmail.com", hashPassword: "$2b$08$xA9tnzZIUM63bn3dvIRPae2vZCaUk4VPQE.fuGg2MAuQ9OEqPyypG",role: "Staff", imgUrl:"https://media.gettyimages.com/id/1292567082/es/foto/male-personal-trainer-sitting-on-weight-bench-after-training-client-finish-in-a-gym.jpg?s=2048x2048&w=gi&k=20&c=R9YVEJQyRcLTFX8sQsGpYwaOWzAcP1Z8D7iKv0Oxktc="},       //hola
+      {name: "Manu Casanueva", email: "manito@gmail.com", hashPassword: "$2b$08$xA9tnzZIUM63bn3dvIRPae2vZCaUk4VPQE.fuGg2MAuQ9OEqPyypG",role: "Admin", imgUrl:"https://media.gettyimages.com/id/1292567082/es/foto/male-personal-trainer-sitting-on-weight-bench-after-training-client-finish-in-a-gym.jpg?s=2048x2048&w=gi&k=20&c=R9YVEJQyRcLTFX8sQsGpYwaOWzAcP1Z8D7iKv0Oxktc="},       //hola
     ]
 
+    const recetas = [
+      {name:"agüita"}
+    ]
 
+    const relaciones = async()=>{
+      const insumo1 = await Insumo.findByPk(1)
+      await insumo1.setReceta(1)
+      const insumo2 = await Insumo.findByPk(2)
+      await insumo2.setReceta(1)
+    }
+    relaciones()
+
+    Receta.bulkCreate(recetas).then(() => console.log("Recetas cargados"));
     Insumo.bulkCreate(insumos).then(() => console.log("Insumos cargados"));
     Proveedor.bulkCreate(proveedores).then(() => console.log("Proveedores cargados"));
     Usuario.bulkCreate(usuario).then(() => console.log("Usuarios cargados"));
 
   });
 });
-
 
