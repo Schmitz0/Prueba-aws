@@ -1,10 +1,10 @@
 const { Op, Sequelize } = require('sequelize');
 
 const { Router } = require("express");
-const { Producto } = require("../../db.js");
+const { Insumo } = require("../../db.js");
 const { Proveedor } = require("../../db.js");
 const { Remito } = require("../../db.js");
-const { RemitoProducto } = require("../../db.js");
+const { RemitoInsumo } = require("../../db.js");
 
 
 const router = Router();
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
     try {
       const remitos = await Remito.findAll({
         include: [{
-          model: Producto,
+          model: Insumo,
           attributes: ['id', 'nombre', 'precio'],
           through: { attributes: ['cantidad'] }
         },
@@ -35,7 +35,7 @@ router.get("/:id", async (req, res) => {
     try {
       const remito = await Remito.findByPk(id, {
         include: [{
-          model: Producto,
+          model: Insumo,
           attributes: ['id', 'nombre', 'precio'],
           through: { attributes: ['cantidad'] }
         },
@@ -54,15 +54,15 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { productos, proveedorId } = req.body;
+  const { insumos, proveedorId } = req.body;
   try {
     const remito = await Remito.create({ proveedorId });
-    for (const { id, cantidad , precio } of productos) {
-      const producto = await Producto.findByPk(id);
-      let quantity = producto.stock
-      await remito.addProducto(producto, { through: { cantidad } });
-      await producto.update({precio})
-      await producto.update({
+    for (const { id, cantidad , precio } of insumos) {
+      const insumo = await Insumo.findByPk(id);
+      let quantity = insumo.stock
+      await remito.addInsumo(insumo, { through: { cantidad } });
+      await insumo.update({precio})
+      await insumo.update({
         stock: quantity + cantidad,
       })
     }
@@ -78,29 +78,28 @@ router.delete('/:id', async (req, res) => {
       const { id } = req.params;
       const remitoABorrar = await Remito.findByPk(id, {
         include:[{
-          model:Producto,
+          model:Insumo,
           attributes:["stock"],
         }]
       });
 
-      !remitoABorrar && res.status(400).send("El ID del remito no fue encontrado")
+      // !remitoABorrar && res.status(400).send("El ID del remito no fue encontrado")
       
-      // const aux = await RemitoProducto.findByPk(id)
-      const prod = remitoABorrar.Productos;
+      const ins = remitoABorrar.Insumos;
 
-      for (let i = 0; i < prod.length; i++) {
+      for (let i = 0; i < ins.length; i++) {
 
-        let prodId = prod[i].RemitoProducto.ProductoId;
-        let prodQuantity = prod[i].stock;
+        let insId = ins[i].RemitoInsumo.InsumoId;
+        let insQuantity = ins[i].stock;
 
         //asi es para llegar a los datos que necesitamos
-        //console.log(prod[i].RemitoProducto.ProductoId);
-        //console.log(prod[i].stock);
+        //console.log(ins[i].RemitoInsumo.InsumoId);
+        //console.log(ins[i].stock); 
 
-        const producto = await Producto.findByPk(prodId);
-        let quantity = producto.stock
-        await producto.update({
-          stock: quantity - prodQuantity,
+        const insumo = await Insumo.findByPk(insId);
+        let quantity = insumo.stock
+        await insumo.update({
+          stock: quantity - insQuantity,
         })
       }
       

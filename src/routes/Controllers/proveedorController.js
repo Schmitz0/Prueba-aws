@@ -14,6 +14,20 @@ router.get("/", async (req, res) => {
   }
 )
 
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+    try {
+      const proveedorId = await Proveedor.findByPk(id);
+      !proveedorId ?
+      res.status(400).send("El ID del insumo no fue encontrado") :
+      res.status(200).send(proveedorId)
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al obtener el proveedor solicitado');
+      }
+  }
+)
+
 router.post("/", async (req, res) => {
     const { nombre, nombreContacto, email, descripcion, telefono} = req.body;
     try {

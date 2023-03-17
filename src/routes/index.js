@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const producto = require("./Controllers/productoController.js");
+const insumo = require("./Controllers/insumoController.js");
 const proveedor = require("./Controllers/proveedorController.js");
 const movimiento = require("./Controllers/movimientoController.js");
 const remito = require("./Controllers/remitoController.js");
@@ -8,7 +8,7 @@ const userExtractor = require("./middleware/userExtractor.js");
 
 const router = Router();
 
-router.use("/producto", producto);
+router.use("/insumo", insumo);
 router.use("/proveedor", proveedor);
 router.use("/remito",  remito);
 router.use("/login",login);
