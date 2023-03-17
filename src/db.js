@@ -60,11 +60,11 @@ Remito.belongsTo(Proveedor, { foreignKey: 'proveedorId' });
 Movimiento.belongsToMany(Insumo, { through: MovimientoInsumo })
 Insumo.belongsToMany(Movimiento, { through: MovimientoInsumo })
 
-Receta.belongsToMany (Insumo, {through : InsumoReceta })
-Insumo.belongsToMany (Receta, {through  : InsumoReceta})
+Receta.belongsToMany(Insumo, {through : InsumoReceta })
+Insumo.belongsToMany(Receta, {through  : InsumoReceta})
 
-Receta.belongsToMany (Movimiento, {through : RecetaMovimiento})
-Movimiento.belongsToMany (Receta, {through : RecetaMovimiento})
+Receta.belongsToMany(Movimiento, {through : RecetaMovimiento})
+Movimiento.belongsToMany(Receta, {through : RecetaMovimiento})
 
 Movimiento.belongsTo(Usuario)
 Usuario.hasMany(Movimiento)
