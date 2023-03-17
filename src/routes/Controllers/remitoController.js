@@ -31,83 +31,84 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-    const { id } = req.params;
-    try {
-      const remito = await Remito.findByPk(id, {
-        include: [{
+  const { id } = req.params;
+  try {
+    const remito = await Remito.findByPk(id, {
+      include: [
+        {
           model: Insumo,
-          attributes: ['id', 'nombre', 'precio'],
-          through: { attributes: ['cantidad'] }
+          attributes: ["id", "nombre", "precio"],
+          through: { attributes: ["cantidad"] },
         },
         {
           model: Proveedor,
-        }],
-        order: [['createdAt', 'DESC']]
-      });
-      
-      !remito ? res.status(404).send(`Remito ${id} no encontrado`):
-      res.json(remito);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Remito no encontrado');
-    }
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    !remito
+      ? res.status(404).send(`Remito ${id} no encontrado`)
+      : res.json(remito);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Remito no encontrado");
+  }
 });
 
 router.post("/", async (req, res) => {
   const { insumos, proveedorId } = req.body;
   try {
     const remito = await Remito.create({ proveedorId });
-    for (const { id, cantidad , precio } of insumos) {
+    for (const { id, cantidad, precio } of insumos) {
       const insumo = await Insumo.findByPk(id);
-      let quantity = insumo.stock
+      let quantity = insumo.stock;
       await remito.addInsumo(insumo, { through: { cantidad } });
-      await insumo.update({precio})
+      await insumo.update({ precio });
       await insumo.update({
         stock: quantity + cantidad,
-      })
+      });
     }
     res.json(remito);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error al crear el remito');
+    res.status(500).send("Error al crear el remito");
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
-      const { id } = req.params;
-      const remitoABorrar = await Remito.findByPk(id, {
-        include:[{
-          model:Insumo,
-          attributes:["stock"],
-        }]
+    const { id } = req.params;
+    const remitoABorrar = await Remito.findByPk(id, {
+      include: [
+        {
+          model: Insumo,
+          attributes: ["stock"],
+        },
+      ],
+    });
+
+    if(!remitoABorrar) throw new Error("El ID del remito no fue encontrado");
+
+    const ins = remitoABorrar.Insumos;
+
+    for (let i = 0; i < ins.length; i++) {
+      let insId = ins[i].RemitoInsumo.InsumoId;
+      let insQuantity = ins[i].RemitoInsumo.cantidad;
+
+      const insumo = await Insumo.findByPk(insId);
+      let quantity = insumo.stock;
+      await insumo.update({
+        stock: quantity - insQuantity,
       });
+    }
 
-      // !remitoABorrar && res.status(400).send("El ID del remito no fue encontrado")
-      
-      const ins = remitoABorrar.Insumos;
-
-      for (let i = 0; i < ins.length; i++) {
-
-        let insId = ins[i].RemitoInsumo.InsumoId;
-        let insQuantity = ins[i].stock;
-
-        //asi es para llegar a los datos que necesitamos
-        //console.log(ins[i].RemitoInsumo.InsumoId);
-        //console.log(ins[i].stock); 
-
-        const insumo = await Insumo.findByPk(insId);
-        let quantity = insumo.stock
-        await insumo.update({
-          stock: quantity - insQuantity,
-        })
-      }
-      
-      remitoABorrar.destroy();
-      res.status(200).send(remitoABorrar)
+    remitoABorrar.destroy();
+    res.status(200).send(remitoABorrar);
+    
   } catch (error) {
-      res.status(400).send(error.message)
+    res.status(400).send(error.message);
   }
-})
+});
 
 module.exports = router;
