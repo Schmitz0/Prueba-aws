@@ -1,29 +1,28 @@
 const { Router } = require("express");
-const { Producto } = require("../../db.js");
+const { Insumo } = require("../../db.js");
 
 const router = Router();
 
 router.get("/", async (req, res) => {
-
     try {
-        const productos = await Producto.findAll();
-        res.json(productos);
+        const insumo = await Insumo.findAll();
+        res.json(insumo);
       } catch (error) {
         console.error(error);
-        res.status(500).send('Error al obtener los productos');
+        res.status(500).send('Error al obtener los insumo');
       }
   }
 )
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
     try {
-      const productoId = await Producto.findByPk(id);
-      !productoId ?
-      res.status(400).send("El ID del producto no fue encontrado") :
-      res.status(200).send(productoId)
+      const insumoId = await Insumo.findByPk(id);
+      !insumoId ?
+      res.status(400).send("El ID del insumo no fue encontrado") :
+      res.status(200).send(insumoId)
       } catch (error) {
         console.error(error);
-        res.status(500).send('Error al obtener el producto solicitado');
+        res.status(500).send('Error al obtener el insumo solicitado');
       }
   }
 )
@@ -31,11 +30,11 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
     const { nombre, precio, stock , descripcion, proveedor, imgUrl, unidad, categoria} = req.body;
     try {
-      const producto = await Producto.create({ nombre, precio, stock,descripcion, proveedor, imgUrl, unidad, categoria });
-      res.json(producto);
+      const insumo = await Insumo.create({ nombre, precio, stock ,descripcion, proveedor, imgUrl, unidad, categoria });
+      res.json(insumo);
     } catch (error) {
       console.error(error);
-      res.status(500).send('Error al crear el producto');
+      res.status(500).send('Error al crear el insumo');
     }
   }
 )
@@ -49,11 +48,11 @@ router.put('/:id', async (req, res) => {
     }
 
   try {
-      const producto = await Producto.findByPk(id)
+      const insumo = await Insumo.findByPk(id)
 
-      await producto.update(changes)
+      await insumo.update(changes)
 
-      return res.status(200).json(producto)
+      return res.status(200).json(insumo)
 
   } catch (error) {
       res.status(400).send(error.message)
@@ -63,16 +62,14 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
       const { id } = req.params;
-      const productToDelete = await Producto.findByPk(id);
-      if (productToDelete) {
-          await productToDelete.destroy()
-          res.status(200).send(`El producto de id ${id} fue borrado con éxito`)
+      const insumoABorrar = await Insumo.findByPk(id);
+      if (insumoABorrar) {
+          await insumoABorrar.destroy()
+          res.status(200).send(`El insumo de id ${id} fue borrado con éxito`)
       }
   } catch (error) {
       res.status(400).send(error.message)
   }
 })
-
-
 
 module.exports = router;

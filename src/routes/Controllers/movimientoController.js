@@ -1,10 +1,10 @@
 const { Op } = require('sequelize');
 
 const { Router } = require("express");
-const { Producto } = require("../../db.js");
+const { Insumo } = require("../../db.js");
 const { Usuario } = require("../../db.js");
 const { Movimiento } = require("../../db.js");
-const {MovimientoProducto} = require('../../db.js');
+const { MovimientoInsumo } = require('../../db.js');
 
 const router = Router();
 
@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
     try {
       const movimiento = await Movimiento.findAll({
         include: [{
-          model: Producto,
+          model: Insumo,
           attributes: ['id', 'nombre'],
           through: { attributes: ['cantidad','diferencia'] }
         },
@@ -27,23 +27,23 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { tipoDeMovimiento, productos, motivo } = req.body;
+  const { tipoDeMovimiento, insumos, motivo } = req.body;
   try {
     const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
-    for (const { id, cantidad } of productos) {
-      const producto = await Producto.findByPk(id);
-      let quantity = producto.stock
+    for (const { id, cantidad } of insumos) {
+      const insumo = await Insumo.findByPk(id);
+      let quantity = insumo.stock
       const diferencia = cantidad-quantity;
       console.log(diferencia)
-      await movimiento.addProducto(producto, { through: { cantidad } });
-      await movimiento.addProducto(producto, { through: { diferencia:diferencia } });
+      await movimiento.addInsumo(insumo, { through: { cantidad } });
+      await movimiento.addInsumo(insumo, { through: { diferencia: diferencia } });
         // await movimiento.update({
         //     cantidad: cantidad,
         // })
         // await movimiento.update({
         //     diferencia: dif,
         // })
-      await producto.update({
+      await insumo.update({
         stock: cantidad,
       })
     }
