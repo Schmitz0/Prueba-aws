@@ -1,16 +1,17 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    sequelize.define('recipes', {
+    sequelize.define("Receta", {
         name: {
             type: DataTypes.STRING(50),
-            allowNull: false,
-            unique:true,
+            // allowNull: false,
+            // unique:true,
         },
        
     },
     {
       paranoid: true,
     }
+    
   )
 }

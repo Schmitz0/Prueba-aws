@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    sequelize.define('recipes', {
+    sequelize.define("RecetaMovimiento", {
         cantidadProducida: {
             type : DataTypes.INTEGER          
         },
@@ -9,6 +9,9 @@ module.exports = (sequelize) => {
     },
     {
       paranoid: true,
-    }
+    },
+    {
+      tableName : "movimiento_recetas"
+  }
   )
 }

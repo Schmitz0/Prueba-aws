@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    sequelize.define('recipes', {
+    sequelize.define("InsumoReceta", {
         cantidad : {
             type : DataTypes.FLOAT          
         },
@@ -16,6 +16,9 @@ module.exports = (sequelize) => {
     },
     {
       paranoid: true,
+    },
+    {
+        tableName : "insumos_recetas"
     }
   )
 }
