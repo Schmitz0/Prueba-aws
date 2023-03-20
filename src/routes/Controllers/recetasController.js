@@ -10,28 +10,28 @@ const router = Router();
 
 router.post("/", async (req, res) => {
     const {name, insumos, cantidadProducida} = req.body;
-    try {
-      const receta = await Receta.create({ name });
-      for (const { id, cantidad, costo, costoPorBotella } of insumos) {
-        const insumo = await Insumo.findByPk(id);
-        let quantity = insumo.stock;
-        await receta.addInsumo(insumo, { through: { cantidad } });
-        await receta.addInsumo(insumo, { through: { costo } });
-        await receta.addInsumo(insumo, { through: { costoPorBotella } });
-        // await InsumoReceta.uptade({costo,  costoPorBotella})        
-        await insumo.update({
-          stock: quantity - cantidad,
-        });
-      }
-      
-
-
-      res.json(receta);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error al crear la receta");
+  try {
+    const receta = await Receta.create({ name });
+    for (const { id, cantidad, costo, costoPorBotella } of insumos) {
+      const insumo = await Insumo.findByPk(id);
+      let quantity = insumo.stock;
+      await receta.addInsumo(insumo, { through: { cantidad } });
+      await receta.addInsumo(insumo, { through: { costo } });
+      await receta.addInsumo(insumo, { through: { costoPorBotella } });
+      // await InsumoReceta.uptade({costo,  costoPorBotella})        
+      await insumo.update({
+        stock: quantity - cantidad,
+      });
     }
-  });
+
+
+
+    res.json(receta);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al crear la receta");
+  }
+});
 
 
 
@@ -55,20 +55,36 @@ router.post("/", async (req, res) => {
 
 
 
-  router.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
 
-    try {
-      const recetas = await Receta.findAll({
-        include: [{
-          model: Insumo,
-        }],
-        order: [['createdAt', 'DESC']]
-      });
-      res.json(recetas);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Error al obtener las recetas');
-    }
+  try {
+    const recetas = await Receta.findAll({
+      include: [{
+        model: Insumo,
+      }],
+      order: [['createdAt', 'DESC']]
+    });
+    res.json(recetas);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al obtener las recetas');
+  }
 });
 
-  module.exports = router;
+router.get("/:id", async (req, res) => {
+  const { id } = req.params
+  try {
+    const receta = await Receta.findByPk(id, {
+      include: [{
+        model: Insumo,
+      }],
+      order: [['createdAt', 'DESC']]
+    });
+    res.json(receta);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(`Error al obtener la receta de id ${id}`);
+  }
+});
+
+module.exports = router;
