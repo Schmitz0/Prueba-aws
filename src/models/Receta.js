@@ -7,7 +7,9 @@ module.exports = (sequelize) => {
             allowNull: false,
             unique:true,
         },
-       
+        costoPorReceta: {
+            type: DataTypes.FLOAT,
+        },
     },
     {
       paranoid: true,

@@ -1,27 +1,26 @@
-const { Op } = require("sequelize");
+const { Op } = require('sequelize');
 
-const { Router } = require("express");
-const { Insumo } = require("../../db.js");
-const { Receta} = require("../../db.js");
-const { Movimiento } = require("../../db.js");
-const {Insumos} = require("../../db.js");
-const { MovimientoInsumo } = require("../../db.js");
-
+const { Router } = require('express');
+const { Insumo } = require('../../db.js');
+const { Receta } = require('../../db.js');
+const { Movimiento } = require('../../db.js');
+const { MovimientoInsumo } = require('../../db.js');
+const { updateInsumo } = require('../Controllers/utils.js');
 
 const router = Router();
 
-router.get("/:id", async (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const movimiento = await Movimiento.findByPk(id, {
       include: [
         {
           model: Insumo,
-          attributes: ["id", "nombre"],
-          through: { attributes: ["cantidad", "diferencia"] },
+          attributes: ['id', 'nombre'],
+          through: { attributes: ['cantidad', 'diferencia'] },
         },
       ],
-      order: [["createdAt", "DESC"]],
+      order: [['createdAt', 'DESC']],
     });
     res.json(movimiento);
   } catch (error) {
@@ -30,29 +29,30 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const movimiento = await Movimiento.findAll({
       include: [
         {
           model: Insumo,
-          attributes: ["id", "nombre"],
-          through: { attributes: ["cantidad", "diferencia"] },
+          attributes: ['id', 'nombre'],
+          through: { attributes: ['cantidad', 'diferencia'] },
         },
       ],
-      order: [["createdAt", "DESC"]],
+      order: [['createdAt', 'DESC']],
     });
     res.json(movimiento);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error al obtener los movimientos");
+    res.status(500).send('Error al obtener los movimientos');
   }
 });
 
-router.post("/", async (req, res) => {
+router.post('/:idReceta', async (req, res) => {
   const { tipoDeMovimiento, insumos, motivo, cantidadProducida } = req.body;
+  const { idReceta } = req.params;
   try {
-    if (tipoDeMovimiento === "Movimiento de insumo") {
+    if (tipoDeMovimiento === 'Movimiento de insumo') {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
       for (const { id, cantidad } of insumos) {
         const insumo = await Insumo.findByPk(id);
@@ -66,33 +66,41 @@ router.post("/", async (req, res) => {
       }
 
       res.json(movimiento);
-     } 
-     
-     if (tipoDeMovimiento === "Receta") {
+    }
+
+    if (tipoDeMovimiento === 'Receta') {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
-      await movimiento.update ({cantidadProducida})
-      for (const { id, cantidad } of insumos) {
-        const inReceta = await Receta.findByPk (id, {include : [  {model: Insumo,
-          through: { attributes: ["cantidad", "costo", "costoPorBotella"] }, }]}  )
-        console.log(inReceta);
+      await movimiento.update({ cantidadProducida });
+      const receta = await Receta.findByPk(idReceta, {
+        include: [
+          {
+            model: Insumo,
+            through: { attributes: ['cantidad', 'costo', 'costoPorBotella'] },
+          },
+        ],
+      });
 
-        const insumo = await Insumo.findByPk(id);
-        let quantity = insumo.stock;
-        let cantidadTotal = cantidad * cantidadProducida
-        await movimiento.addInsumo(insumo, { through: { cantidadTotal } });
-       
+      const aux = await Promise.all(receta.Insumos?.map(async (e) => {
+        let insumo = await updateInsumo(e.id)
+        // let insumo = Insumo.findByPk(e.id);
+        // let cantidadTotal = e.InsumoReceta.cantidad * cantidadProducida;
+        // console.log(insumo);
+        return insumo;
+      }));
 
+      console.log(aux, idReceta);
 
-        await insumo.update({
-          stock: quantity - cantidadTotal,
-        });
-      }
+      // const insumo = await Insumo.findByPk(id);
+      // let quantity = insumo.stock;
+      // let cantidadTotal = cantidad * cantidadProducida
+      // await movimiento.addInsumo(insumo, { through: { cantidadTotal } });
 
-      res.json(movimiento);
+      // await insumo.update({
+      //   stock: quantity - cantidadTotal,
+      // });
 
-
-
-     } else {
+      res.json(aux);
+    } else {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
       for (const { id, cantidad } of insumos) {
         const insumo = await Insumo.findByPk(id);
@@ -111,27 +119,27 @@ router.post("/", async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error al crear el movimiento");
+    res.status(500).send('Error al crear el movimiento');
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const movABorrar = await Movimiento.findByPk(id, {
       include: [
         {
           model: Insumo,
-          attributes: ["stock"],
+          attributes: ['stock'],
         },
       ],
     });
 
-    if (!movABorrar) throw new Error("El ID del movimiento no fue encontrado");
+    if (!movABorrar) throw new Error('El ID del movimiento no fue encontrado');
 
     if (
-      movABorrar.tipoDeMovimiento === "Movimiento de insumo" ||
-      movABorrar.tipoDeMovimiento === "Receta"
+      movABorrar.tipoDeMovimiento === 'Movimiento de insumo' ||
+      movABorrar.tipoDeMovimiento === 'Receta'
     ) {
       const ins = movABorrar.Insumos;
 
