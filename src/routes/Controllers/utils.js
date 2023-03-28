@@ -3,6 +3,14 @@ const { Receta } = require("../../db.js");
 const { Insumo } = require("../../db.js");
 
 
+const updateInsumo = async (id) => {
+    
+        let insumo = await Insumo.findByPk(id)
+        return insumo;
+    
+}
+
+
 const json = [
     null,
     {
@@ -768,7 +776,6 @@ const json = [
     }
 ]
 
-
 const setRecetas = async (arr) => {
     for (let i = 0; i < arr.length; i++) {
         let obj = arr[i];
@@ -836,4 +843,4 @@ const setInsumoReceta = async (arr) => {
 // }
 
 
-module.exports = { setRecetas, json, setInsumoReceta };
+module.exports = { setRecetas, json, setInsumoReceta, updateInsumo };
