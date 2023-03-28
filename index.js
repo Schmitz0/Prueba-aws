@@ -99,7 +99,7 @@ conn.sync({ force: true }).then(() => {
     // relaciones()
     ///////////////////////////////////////////////////////
 
-    setInsumoReceta(json)
+    // setInsumoReceta(json)
  
     Receta.bulkCreate(setRecetas(json)).then(() => console.log("Recetas cargados"));
     Insumo.bulkCreate(insumos).then(() => console.log("Insumos cargados"));

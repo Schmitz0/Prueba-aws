@@ -14,13 +14,13 @@ router.post("/", async (req, res) => {
     const receta = await Receta.create({ name });
     for (const { id, cantidad, costo, costoPorBotella } of insumos) {
       const insumo = await Insumo.findByPk(id);
-      let quantity = insumo.stock;
+      let precio = insumos.precio;
       await receta.addInsumo(insumo, { through: { cantidad } });
       await receta.addInsumo(insumo, { through: { costo } });
-      await receta.addInsumo(insumo, { through: { costoPorBotella } });
+      await receta.addInsumo(insumo, { through: {  costoPorBotella } });
       // await InsumoReceta.uptade({costo,  costoPorBotella})        
       await insumo.update({
-        stock: quantity - cantidad,
+        precio: cantidad * costoPorBotella
       });
     }
 
