@@ -14,11 +14,5 @@ module.exports = (sequelize) => {
 
        
     },
-    // {
-    //   paranoid: true,
-    // },
-    {
-        tableName : "insumos_recetas"
-    }
   )
 }

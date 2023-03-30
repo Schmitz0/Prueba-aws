@@ -9,9 +9,8 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false
     }
-  }, {
-    tableName: 'remitos_insumos'
-  })
+  }
+  )
 };
 
 

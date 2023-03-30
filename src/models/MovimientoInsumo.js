@@ -14,8 +14,6 @@ sequelize.define('MovimientoInsumo', {
 
   },
 
-}, {
-  tableName: 'movimientos_insumos'
 })
 };
 

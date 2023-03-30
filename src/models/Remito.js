@@ -9,7 +9,5 @@ module.exports = (sequelize) => {
       autoIncrement: true
     },
   },
-  {
-    tableName: 'remitos'
-  })
+  )
 };
