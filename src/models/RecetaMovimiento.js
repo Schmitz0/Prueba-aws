@@ -9,9 +9,6 @@ module.exports = (sequelize) => {
     },
     {
       paranoid: true,
-    },
-    {
-      tableName : "movimiento_recetas"
-  }
+    }
   )
 }

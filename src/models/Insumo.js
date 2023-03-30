@@ -43,8 +43,5 @@ module.exports = (sequelize) => {
         type: DataTypes.TEXT,
       },
     },
-    {
-      tableName: "insumos",
-    }
   );
 };

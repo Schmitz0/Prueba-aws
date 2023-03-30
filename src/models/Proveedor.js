@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    sequelize.define('proveedor', {
+    sequelize.define('Proveedor', {
         nombre: {
             type: DataTypes.STRING(50),
             // allowNull: false,
@@ -22,9 +22,6 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             // allowNull:false,
         }
-    },
-    {
-        paranoid: true
     }
   )
 }

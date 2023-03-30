@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    sequelize.define("receta", {
+    sequelize.define("Receta", {
         name: {
             type: DataTypes.STRING(50),
             allowNull: false,
@@ -10,9 +10,6 @@ module.exports = (sequelize) => {
         costoPorReceta: {
             type: DataTypes.FLOAT,
         },
-    },
-    {
-      paranoid: true,
     }
     
   )
