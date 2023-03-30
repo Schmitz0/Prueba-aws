@@ -5,6 +5,7 @@ const { Insumo } = require('../../db.js');
 const { Receta } = require('../../db.js');
 const { Movimiento } = require('../../db.js');
 const { MovimientoInsumo } = require('../../db.js');
+const {RecetaMovimiento} = require("../../db.js")
 const { updateInsumo } = require('../Controllers/utils.js');
 
 const router = Router();
@@ -35,12 +36,17 @@ router.get('/', async (req, res) => {
       include: [
         {
           model: Insumo,
-          attributes: ['id', 'nombre'],
-          through: { attributes: ['cantidad', 'diferencia'] },
         },
+        {
+          model: Receta,
+        },
+        
+     
       ],
       order: [['createdAt', 'DESC']],
     });
+
+
     res.json(movimiento);
   } catch (error) {
     console.error(error);
@@ -48,9 +54,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/:idReceta', async (req, res) => {
-  const { tipoDeMovimiento, insumos, motivo, cantidadProducida } = req.body;
-  const { idReceta } = req.params;
+router.post('/', async (req, res) => {
+  const { tipoDeMovimiento, insumos, motivo } = req.body;
   try {
     if (tipoDeMovimiento === 'Movimiento de insumo') {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
@@ -66,40 +71,6 @@ router.post('/:idReceta', async (req, res) => {
       }
 
       res.json(movimiento);
-    }
-
-    if (tipoDeMovimiento === 'Receta') {
-      const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
-      await movimiento.update({ cantidadProducida });
-      const receta = await Receta.findByPk(idReceta, {
-        include: [
-          {
-            model: Insumo,
-            through: { attributes: ['cantidad', 'costo', 'costoPorBotella'] },
-          },
-        ],
-      });
-
-      const aux = await Promise.all(receta.Insumos?.map(async (e) => {
-        let insumo = await updateInsumo(e.id)
-        // let insumo = Insumo.findByPk(e.id);
-        // let cantidadTotal = e.InsumoReceta.cantidad * cantidadProducida;
-        // console.log(insumo);
-        return insumo;
-      }));
-
-      console.log(aux, idReceta);
-
-      // const insumo = await Insumo.findByPk(id);
-      // let quantity = insumo.stock;
-      // let cantidadTotal = cantidad * cantidadProducida
-      // await movimiento.addInsumo(insumo, { through: { cantidadTotal } });
-
-      // await insumo.update({
-      //   stock: quantity - cantidadTotal,
-      // });
-
-      res.json(aux);
     } else {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
       for (const { id, cantidad } of insumos) {
@@ -123,6 +94,47 @@ router.post('/:idReceta', async (req, res) => {
   }
 });
 
+router.post('/:idReceta', async (req, res) => {
+  const { tipoDeMovimiento, motivo, cantidadProducida } = req.body;
+  const { idReceta } = req.params;
+  try {
+    if (tipoDeMovimiento === 'Receta') {
+      const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
+      await movimiento.update({ cantidadProducida });
+      const receta = await Receta.findByPk(idReceta, {
+        include: [
+          {
+            model: Insumo,
+            through: { attributes: ['cantidad', 'costo', 'costoPorBotella'] },
+          },
+        ],
+      });
+
+      await movimiento.addReceta(receta, { through: { cantidadProducida } });
+
+        const aux = await Promise.all(receta.Insumos?.map(async (e) => {
+        let insumo = await (e.id);
+        let cantidadUsada = await (e.InsumoReceta.cantidad);
+        const insumoACambiar = await Insumo.findByPk(insumo);
+        const tot = cantidadUsada*cantidadProducida;
+        await insumoACambiar.update({
+          stock: insumoACambiar.stock-tot,
+        });
+ 
+          await movimiento.addInsumo(insumo, { through: { cantidad:tot } });
+
+      }));
+
+      res.json(movimiento);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al crear el movimiento');
+  }
+});
+
+
+
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -142,6 +154,7 @@ router.delete('/:id', async (req, res) => {
       movABorrar.tipoDeMovimiento === 'Receta'
     ) {
       const ins = movABorrar.Insumos;
+   
 
       for (let i = 0; i < ins.length; i++) {
         let insId = ins[i].MovimientoInsumo.InsumoId;
