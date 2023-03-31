@@ -5,7 +5,7 @@ const { Receta } = require('./src/db.js');
 const { Insumo } = require('./src/db.js');
 const { Proveedor } = require('./src/db.js');
 const { Usuario } = require("./src/db.js")
-const {setRecetas, json, setInsumoReceta} = require("./src/routes/Controllers/utils.js")
+const { crearReceta, json } = require("./src/routes/Controllers/utils.js")
 const { PORT } = process.env;
 
 conn.sync({ force: true }).then(() => {
@@ -89,19 +89,8 @@ conn.sync({ force: true }).then(() => {
       { name: "Manu Casanueva", email: "manito@gmail.com", hashPassword: "$2b$08$xA9tnzZIUM63bn3dvIRPae2vZCaUk4VPQE.fuGg2MAuQ9OEqPyypG", role: "Admin", imgUrl: "https://media.gettyimages.com/id/1292567082/es/foto/male-personal-trainer-sitting-on-weight-bench-after-training-client-finish-in-a-gym.jpg?s=2048x2048&w=gi&k=20&c=R9YVEJQyRcLTFX8sQsGpYwaOWzAcP1Z8D7iKv0Oxktc=" },       //hola
     ]
 
-
-    // const relaciones = async()=>{
-    //   const insumo1 = await Insumo.findByPk(1)
-    //   await insumo1.setReceta(1)
-    //   const insumo2 = await Insumo.findByPk(2)
-    //   await insumo2.setReceta(1)
-    // }
-    // relaciones()
-    ///////////////////////////////////////////////////////
-
-    // setInsumoReceta(json)
+    json.map(e=>crearReceta(e.name, e.insumos))
  
-    Receta.bulkCreate(setRecetas(json)).then(() => console.log("Recetas cargados"));
     Insumo.bulkCreate(insumos).then(() => console.log("Insumos cargados"));
     Proveedor.bulkCreate(proveedores).then(() => console.log("Proveedores cargados"));
     Usuario.bulkCreate(usuario).then(() => console.log("Usuarios cargados"));
