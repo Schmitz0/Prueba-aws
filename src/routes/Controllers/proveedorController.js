@@ -19,7 +19,7 @@ router.get("/:id", async (req, res) => {
     try {
       const proveedorId = await Proveedor.findByPk(id);
       !proveedorId ?
-      res.status(400).send("El ID del insumo no fue encontrado") :
+      res.status(400).send("El ID del proveedor no fue encontrado") :
       res.status(200).send(proveedorId)
       } catch (error) {
         console.error(error);
@@ -66,7 +66,7 @@ router.delete('/:id', async (req, res) => {
       const proveedorToDelete = await Proveedor.findByPk(id);
       if (proveedorToDelete) {
           await proveedorToDelete.destroy()
-          res.status(200).send(`El proveedoro de id ${id} fue borrado con éxito`)
+          res.status(200).send(`El proveedor de id ${id} fue borrado con éxito`)
       }
   } catch (error) {
       res.status(400).send(error.message)

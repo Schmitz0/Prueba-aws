@@ -21,7 +21,7 @@ module.exports = (sequelize) => {
         },
         imgUrl:{
             type: DataTypes.TEXT,
-            defaultValue: "https://wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg",
+            defaultValue: "https://angol.cl/images/pagina_principal/noImage.jpg",
         },
     },
     )
