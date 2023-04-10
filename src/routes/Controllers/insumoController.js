@@ -5,7 +5,9 @@ const router = Router();
 
 router.get("/", async (req, res) => {
     try {
-        const insumo = await Insumo.findAll();
+        const insumo = await Insumo.findAll({
+          order: [['id', 'ASC']]
+        });
         res.json(insumo);
       } catch (error) {
         console.error(error);

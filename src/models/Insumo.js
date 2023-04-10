@@ -15,7 +15,7 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       precio: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.DECIMAL,
         // allowNull: false,
       },
       stock: {
