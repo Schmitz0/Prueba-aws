@@ -111,14 +111,17 @@ router.post('/', async (req, res) => {
 
 
 
-router.post('/:idReceta', async (req, res) => {
+router.post('/:id', async (req, res) => {
   const { tipoDeMovimiento, motivo, cantidadProducida } = req.body;
-  const { idReceta } = req.params;
+  const { id } = req.params;
+
+  console.log(req.body);
+
   try {
     if (tipoDeMovimiento === 'Receta') {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
       await movimiento.update({ cantidadProducida });
-      const receta = await Receta.findByPk(idReceta, {
+      const receta = await Receta.findByPk(id, {
         include: [
           {
             model: Insumo,
