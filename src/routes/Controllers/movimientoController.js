@@ -55,22 +55,37 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { tipoDeMovimiento, insumos, motivo } = req.body;
+  const { tipoDeMovimiento, insumos, motivo,tipo } = req.body;
   try {
-    if (tipoDeMovimiento === 'Movimiento de insumo') {
+    if (tipoDeMovimiento === 'Movimiento de insumo' && tipo === 'suma') {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
       for (const { id, cantidad } of insumos) {
         const insumo = await Insumo.findByPk(id);
         let quantity = insumo.stock;
-
+        
         await movimiento.addInsumo(insumo, { through: { cantidad } });
+        console.log(cantidad);
 
         await insumo.update({
-          stock: quantity - cantidad,
+          stock: quantity + cantidad,
         });
       }
 
       res.json(movimiento);
+
+    } else if(tipoDeMovimiento === 'Movimiento de insumo' && tipo === 'resta') {  
+      const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
+    for (const { id, cantidad } of insumos) {
+      const insumo = await Insumo.findByPk(id);
+      let quantity = insumo.stock;
+      await movimiento.addInsumo(insumo, { through: { cantidad } });
+
+      await insumo.update({
+        stock: quantity - cantidad,
+      });
+    }
+
+    res.json(movimiento);
     } else {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
       for (const { id, cantidad } of insumos) {
@@ -93,6 +108,8 @@ router.post('/', async (req, res) => {
     res.status(500).send('Error al crear el movimiento');
   }
 });
+
+
 
 router.post('/:idReceta', async (req, res) => {
   const { tipoDeMovimiento, motivo, cantidadProducida } = req.body;
