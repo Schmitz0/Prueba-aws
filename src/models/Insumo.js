@@ -19,7 +19,7 @@ module.exports = (sequelize) => {
         // allowNull: false,
       },
       stock: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.DECIMAL,
         // allowNull: false,
       },
       categoria: {
