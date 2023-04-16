@@ -67,7 +67,7 @@ router.post('/', async (req, res) => {
         console.log(cantidad);
 
         await insumo.update({
-          stock: quantity + cantidad,
+          stock: Number(quantity) + Number(cantidad),
         });
       }
 
@@ -81,7 +81,7 @@ router.post('/', async (req, res) => {
       await movimiento.addInsumo(insumo, { through: { cantidad } });
 
       await insumo.update({
-        stock: quantity - cantidad,
+        stock: Number(quantity) - Number(cantidad),
       });
     }
 
