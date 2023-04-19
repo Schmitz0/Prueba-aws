@@ -57,9 +57,9 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { insumos, proveedorId } = req.body;
+  const { insumos, proveedorId ,numeroRemito,fecha} = req.body;
   try {
-    const remito = await Remito.create({ proveedorId });
+    const remito = await Remito.create({ proveedorId,numeroRemito,fecha });
     for (const { id, cantidad, precio } of insumos) {
       const insumo = await Insumo.findByPk(id);
       let quantity = insumo.stock;
