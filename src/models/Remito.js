@@ -8,6 +8,14 @@ module.exports = (sequelize) => {
       primaryKey: true,
       autoIncrement: true
     },
+    numeroRemito: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    fecha: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
   },
   )
 };
