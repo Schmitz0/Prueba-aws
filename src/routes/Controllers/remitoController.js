@@ -5,6 +5,8 @@ const { Insumo } = require("../../db.js");
 const { Proveedor } = require("../../db.js");
 const { Remito } = require("../../db.js");
 const { RemitoInsumo } = require("../../db.js");
+const moment = require('moment');
+
 
 
 const router = Router();
@@ -21,7 +23,8 @@ router.get("/", async (req, res) => {
         {
           model: Proveedor,
         }],
-        order: [['createdAt', 'DESC']]
+        order: [['createdAt', 'DESC']],
+        limit:10
       });
       res.json(remitos);
     } catch (error) {
@@ -57,9 +60,12 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { insumos, proveedorId } = req.body;
+  const { insumos, proveedorId,numeroRemito,fecha } = req.body;
   try {
-    const remito = await Remito.create({ proveedorId });
+
+    const aux = moment(fecha, "DD-MM-YYYY").format("YYYY-MM-DD");
+
+    const remito = await Remito.create({ proveedorId,numeroRemito,fecha:aux });
     for (const { id, cantidad, precio } of insumos) {
       const insumo = await Insumo.findByPk(id);
       let quantity = insumo.stock;
@@ -110,5 +116,42 @@ router.delete("/:id", async (req, res) => {
     res.status(400).send(error.message);
   }
 });
+
+router.post("/filters", async (req, res) => {
+  const { filters } = req.body;
+  try {
+
+    console.log(filters);
+   
+    const fecha1 = moment(filters?.fechaMin, "DD-MM-YYYY").format("YYYY-MM-DD");
+    const fecha2 = moment(filters?.fechaMax, "DD-MM-YYYY").format("YYYY-MM-DD");
+
+    const remitos = await Remito.findAll({
+      where: {
+        fecha: (fecha2 && fecha1) ? {[Op.between]: [fecha1, fecha2]} : fecha2 ? {[Op.lte]: fecha2} : fecha1 ? {[Op.gte]: fecha1} : {[Op.not]: "cloudinary"}
+      },
+      
+      include: [{
+        model: Insumo,
+        attributes: ['id', 'nombre', 'precio'],
+        through: { attributes: ['cantidad'] }
+      },
+      {
+        model: Proveedor,
+      }],
+      order: [['createdAt', 'DESC']],
+      limit:10,
+     
+      }
+      );
+    res.json(remitos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al crear el remito");
+  }
+});
+
+
+
 
 module.exports = router;
