@@ -1,10 +1,22 @@
 const { Receta } = require('../../db.js');
 const { Insumo } = require('../../db.js');
+const jwt = require('jsonwebtoken')
+
 
 const updateInsumo = async (id) => {
   let insumo = await Insumo.findByPk(id);
   return insumo;
 };
+
+const generateToken = (user) => {
+  return jwt.sign({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  }, process.env.SECRET || 'algosecreto',
+  {expiresIn:'30d'})
+}
 
 async function crearReceta(nombre, insumos) {
  try {
@@ -791,4 +803,4 @@ const json = [
   ];
   
 
-module.exports = { crearReceta, json, updateInsumo };
+module.exports = { crearReceta, json, updateInsumo, generateToken };
