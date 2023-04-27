@@ -8,11 +8,11 @@ const { generateToken } = require('./utils.js');
 const router = Router();
 
 router.post('/login', async (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
   try {
     const user = await Usuario.findOne({ where: { email: email } });
     if (user) {
-      if (bcrypt.compareSync(req.body.hashPassword, user.hashPassword)) {
+      if (bcrypt.compareSync(password, user.hashPassword)) {
         res.send({
           id: user.id,
           name: user.name,
@@ -26,6 +26,24 @@ router.post('/login', async (req, res) => {
     res.status(401).send({ message: 'invalid email or password' });
   } catch (error) {
     res.send(error.message);
+  }
+});
+
+router.post('/signin', async (req, res) => {
+  const { email, password, name } = req.body;
+  const user = await Usuario.findOne({ where: { email: email } });
+  try {
+    if(user){
+      throw new Error(`El email "${email}" ya fue registrado`)
+    }
+    const newUser = await Usuario.create({
+              email,
+              hashPassword : await bcrypt.hash(password,8),
+              name,
+          })
+          res.status(200).send(`El usuario ${newUser.name} fue creado con éxito`)
+  } catch (error) {
+    res.status(400).send(error.message);
   }
 });
 
