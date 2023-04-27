@@ -69,7 +69,11 @@ Movimiento.belongsToMany(Receta, {through : RecetaMovimiento})
 Movimiento.belongsTo(Usuario)
 Usuario.hasMany(Movimiento)
 
+Movimiento.hasMany(MovimientoInsumo);
+MovimientoInsumo.belongsTo(Movimiento);
 
+MovimientoInsumo.belongsTo(Insumo);
+MovimientoInsumo.belongsTo(Movimiento);
 
 module.exports = {
   ...sequelize.models,

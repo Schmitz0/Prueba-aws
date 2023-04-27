@@ -7,6 +7,7 @@ const { Movimiento } = require('../../db.js');
 const { MovimientoInsumo } = require('../../db.js');
 const {RecetaMovimiento} = require("../../db.js")
 const { updateInsumo } = require('../Controllers/utils.js');
+const moment = require('moment');
 
 const router = Router();
 
@@ -64,7 +65,7 @@ router.post('/', async (req, res) => {
         let quantity = insumo.stock;
         
         await movimiento.addInsumo(insumo, { through: { cantidad } });
-        console.log(cantidad);
+   
 
         await insumo.update({
           stock: Number(quantity) + Number(cantidad),
@@ -97,7 +98,7 @@ router.post('/', async (req, res) => {
         await movimiento.addInsumo(insumo, { through: { diferencia } });
 
         await insumo.update({
-          stock: quantity + diferencia,
+          stock: Number(quantity) + Number(diferencia),
         });
       }
 
@@ -109,13 +110,49 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post("/filters", async (req, res) => {
+  const { filters } = req.body;
+  try {
 
+    const fecha1 = filters.fechaMin ? moment(filters.fechaMin, "DD/MM/YYYY").format("YYYY-MM-DD") : null;
+    const fecha2 = filters.fechaMax ? moment(filters.fechaMax, "DD/MM/YYYY").format("YYYY-MM-DD") : null;
+
+    const movimientos = await Movimiento.findAll({
+      where: {
+        createdAt: (fecha2 && fecha1) ? {[Op.between]: [fecha1, fecha2]} : fecha2 ? {[Op.lte]: fecha2} : fecha1 ? {[Op.gte]: fecha1} : {[Op.not]: "cloudinary"}
+      },
+      include: [
+        {
+          model: Insumo,
+          attributes: ['id', 'nombre', 'precio'],
+          through: { attributes: ['cantidad'] }
+        },
+        {
+          model: MovimientoInsumo,
+          attributes: ['cantidad'],
+          include: {
+            model: Insumo,
+            attributes: ['id', 'nombre', 'precio']
+          }
+        }
+      ],
+      order: [['createdAt', 'DESC']],
+      limit: 10
+    });
+
+  
+    res.json(movimientos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al crear el remito");
+  }
+});
 
 router.post('/:id', async (req, res) => {
   const { tipoDeMovimiento, motivo, cantidadProducida } = req.body;
   const { id } = req.params;
 
-  console.log(req.body);
+
 
   try {
     if (tipoDeMovimiento === 'Receta') {
@@ -210,5 +247,8 @@ router.delete('/:id', async (req, res) => {
     res.status(400).send(error.message);
   }
 });
+
+
+
 
 module.exports = router;
