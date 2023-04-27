@@ -9,10 +9,20 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       cantidadProducida:{
-        type : DataTypes.INTEGER
+        type : DataTypes.DECIMAL,
       },
       motivo: {
         type: DataTypes.STRING,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        allowNull: false,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        allowNull: false,
       },
     },
   );
