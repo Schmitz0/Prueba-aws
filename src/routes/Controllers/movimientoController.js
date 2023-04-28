@@ -155,6 +155,7 @@ router.post('/:id', async (req, res) => {
 
 
   try {
+
     if (tipoDeMovimiento === 'Receta') {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
       await movimiento.update({ cantidadProducida });
@@ -166,7 +167,7 @@ router.post('/:id', async (req, res) => {
           },
         ],
       });
-
+  
       await movimiento.addReceta(receta, { through: { cantidadProducida } });
 
         const aux = await Promise.all(receta.Insumos?.map(async (e) => {
@@ -177,9 +178,9 @@ router.post('/:id', async (req, res) => {
         await insumoACambiar.update({
           stock: insumoACambiar.stock-tot,
         });
- 
+        await movimiento.update({motivo:receta.name})
           await movimiento.addInsumo(insumo, { through: { cantidad:tot } });
-
+          
       }));
 
       res.json(movimiento);
