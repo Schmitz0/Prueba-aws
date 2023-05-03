@@ -19,7 +19,7 @@ module.exports = (sequelize) => {
             type:DataTypes.STRING,
         },
         telefono: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             // allowNull:false,
         }
     }
