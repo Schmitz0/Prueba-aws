@@ -33,7 +33,9 @@ router.get('/:id', async (req, res) => {
       ],
       order: [['createdAt', 'DESC']],
     });
-    res.json(receta);
+    !receta ?
+    res.status(400).send(`La receta de id ${id} no fue encontrada`) :
+    res.status(200).json(receta);
   } catch (error) {
     console.error(error);
     res.status(500).send(`Error al obtener la receta de id ${id}`);
@@ -60,5 +62,19 @@ router.post('/', async (req, res) => {
     res.status(500).send('Error al crear la receta');
   }
 });
+
+
+router.delete('/:id', async (req, res) => {
+  try {
+      const { id } = req.params;
+      const recetaABorrar = await Receta.findByPk(id);
+      if (recetaABorrar) {
+          await recetaABorrar.destroy()
+          res.status(200).send(`La receta de id ${id} fue borrada con éxito`)
+      }
+  } catch (error) {
+      res.status(400).send(error.message)
+  }
+})
 
 module.exports = router;
