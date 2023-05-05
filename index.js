@@ -70,17 +70,17 @@ conn.sync({ force: true }).then(() => {
     ]
 
     const proveedores = [
-      { nombre: "Cristalpet", nombreContacto: "", descripcion: "", email: "", telefono: 0 },
-      { nombre: "Hilosplásticos", nombreContacto: "", descripcion: "", email: "", telefono: 0 },
-      { nombre: "Linde", nombreContacto: "", descripcion: "", email: "", telefono: 0 },
-      { nombre: "Multiflex", nombreContacto: "", descripcion: "", email: "", telefono: 0 },
-      { nombre: "Nortesur", nombreContacto: "", descripcion: "", email: "", telefono: 0 },
-      { nombre: "Pamer", nombreContacto: "", descripcion: "", email: "", telefono: 0 },
-      { nombre: "Pandoplast", nombreContacto: "", descripcion: "", email: "", telefono: 0 },
-      { nombre: "RBS", nombreContacto: "", descripcion: "", email: "", telefono: 0 },
-      { nombre: "IMESI", nombreContacto: "", descripcion: "", email: "", telefono: 0 },
-      { nombre: "Ecoflex", nombreContacto: "", descripcion: "", email: "", telefono: 0 },
-      { nombre: "Percat", nombreContacto: "", descripcion: "", email: "", telefono: 0 },
+      { nombre: "Cristalpet", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
+      { nombre: "Hilosplásticos", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
+      { nombre: "Linde", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
+      { nombre: "Multiflex", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
+      { nombre: "Nortesur", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
+      { nombre: "Pamer", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
+      { nombre: "Pandoplast", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
+      { nombre: "RBS", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
+      { nombre: "IMESI", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
+      { nombre: "Ecoflex", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
+      { nombre: "Percat", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
     ]
 
     const usuario = [
