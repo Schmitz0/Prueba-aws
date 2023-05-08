@@ -2,6 +2,7 @@ const { Router } = require('express');
 const { Receta } = require('../../db.js');
 const { Insumo } = require('../../db.js');
 const { Movimiento } = require('../../db.js');
+const {InsumoReceta} = require('../../db.js');
 
 const router = Router();
 
@@ -19,6 +20,56 @@ router.get('/', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Error al obtener las recetas');
+  }
+});
+
+router.put('/precios', async (req, res) => {
+ 
+  try {
+    const receta = await Receta.findAll({
+      include: [
+        {
+          model: Insumo,
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+    });
+
+    for (let i = 0; i < receta.length; i++) {
+      let contador = 0;
+      const recetaAct = receta[i].id;
+      const costoReceta = await Receta.findOne({where:{id:recetaAct}});
+      for (let j = 0; j < receta[i].Insumos.length; j++) {
+
+       const insumoAct = receta[i].Insumos[j].id;
+      
+        const precioAct = receta[i].Insumos[j].precio;
+
+        const insumoReceta = await InsumoReceta.findOne({
+          where: {
+            RecetumId: recetaAct,
+            InsumoId: insumoAct // El ID del insumo que quieres actualizar
+          }
+        });
+
+        contador += precioAct * insumoReceta.cantidad;
+
+        const costPorBottle = precioAct*insumoReceta.cantidad
+
+     
+        await insumoReceta.update({ costo: precioAct });
+        await insumoReceta.update({ costoPorBotella: costPorBottle });
+      
+      }
+
+      
+      await costoReceta.update({costoPorReceta:contador})
+      
+    }
+    res.json(receta);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al crear la receta');
   }
 });
 
@@ -44,6 +95,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const { name, insumos } = req.body;
+  console.log(req.body);
   try {
     const receta = await Receta.create({ name });
     for (const { id, cantidad, costo, costoPorBotella } of insumos) {
@@ -76,5 +128,9 @@ router.delete('/:id', async (req, res) => {
       res.status(400).send(error.message)
   }
 })
+
+
+
+
 
 module.exports = router;
