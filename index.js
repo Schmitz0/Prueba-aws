@@ -15,9 +15,9 @@ conn.sync({ force: true }).then(() => {
 
     const insumos = [
       {categoria:"Alimentos", nombre:"ACIDO ASCORBICO", precio:9.2, stock: 9000, proveedor:"LG", unidad:"kg", descripcion:"-", imgUrl:"-"},
-      {categoria:"Alimentos", nombre:"ACIDO CITRICO ANHIDRO", precio:4.2, stock: 800, proveedor:"LG", unidad:"-", descripcion:"-", imgUrl:"-"},
-      {categoria:"Alimentos", nombre:"Acido Fosfórico", precio:3.76, stock: 560, proveedor:"LG", unidad:"-", descripcion:"-", imgUrl:"-"},
-      {categoria:"Alimentos", nombre:"AN CARAMELO 822227", precio:2, stock: 900, proveedor:"LG", unidad:"-", descripcion:"-", imgUrl:"-"},
+      {categoria:"Alimentos", nombre:"ACIDO CITRICO ANHIDRO", precio:4.2, stock: 1, proveedor:"LG", unidad:"-", descripcion:"-", imgUrl:"-"},
+      {categoria:"Alimentos", nombre:"Acido Fosfórico", precio:3.76, stock:1, proveedor:"LG", unidad:"-", descripcion:"-", imgUrl:"-"},
+      {categoria:"Alimentos", nombre:"AN CARAMELO 822227", precio:2, stock: 9, proveedor:"LG", unidad:"-", descripcion:"-", imgUrl:"-"},
       {categoria:"Alimentos", nombre:"AZUCAR INVERTIDO", precio:0.711, stock: 90, proveedor:"azucarlito", unidad:"-", descripcion:"-", imgUrl:"-"},
       {categoria:"Alimentos", nombre:"BENZOATO DE SODIO", precio:4.4, stock: 130, proveedor:"LG", unidad:"-", descripcion:"-", imgUrl:"-"},
       {categoria:"Alimentos", nombre:"CITRATO DE SODIO", precio:4.6, stock: 340, proveedor:"", unidad:"-", descripcion:"-", imgUrl:"-"},

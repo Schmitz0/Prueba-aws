@@ -16,6 +16,22 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/stock', async (req, res) => {
+  try {
+    const insumosBajoStock = await Insumo.findAll({
+      where: {
+        stock: {
+          [Op.lt]: 10 // Establece el límite de stock bajo aquí
+        }
+      },
+      order: [['stock', 'ASC']],
+    });
+    res.json(insumosBajoStock);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al obtener los insumos con bajo stock');
+  }
+});
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -28,6 +44,7 @@ router.get('/:id', async (req, res) => {
     res.status(500).send('Error al obtener el insumo solicitado');
   }
 });
+
 
 router.post('/', async (req, res) => {
   const {
