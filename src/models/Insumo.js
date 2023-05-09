@@ -22,6 +22,10 @@ module.exports = (sequelize) => {
         type: DataTypes.DECIMAL,
         // allowNull: false,
       },
+      stockCritico: {
+        type: DataTypes.DECIMAL,
+        // allowNull: false,
+      },
       categoria: {
         type: DataTypes.STRING,
         //allowNull: false,
