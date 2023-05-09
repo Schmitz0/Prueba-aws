@@ -6,7 +6,7 @@ const Insumo = require('./Insumo');
 module.exports = (sequelize) => {
 sequelize.define('MovimientoInsumo', {
   cantidad: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.DECIMAL,
     // allowNull: false
   },
   diferencia: {
