@@ -21,7 +21,7 @@ router.get('/stock', async (req, res) => {
     const insumosBajoStock = await Insumo.findAll({
       where: {
         stock: {
-          [Op.lt]: 10 // Establece el límite de stock bajo aquí
+          [Op.lt]: Sequelize.col('Insumo.stockCritico'),
         }
       },
       order: [['stock', 'ASC']],
@@ -51,6 +51,7 @@ router.post('/', async (req, res) => {
     nombre,
     precio,
     stock,
+    stockCritico,
     descripcion,
     proveedor,
     imgUrl,
@@ -62,6 +63,7 @@ router.post('/', async (req, res) => {
       nombre,
       precio,
       stock,
+      stockCritico,
       descripcion,
       proveedor,
       imgUrl,
