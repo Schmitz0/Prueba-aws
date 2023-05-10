@@ -50,21 +50,27 @@ router.post("/", async (req, res) => {
         const cantidadInsumo = recorrido2[j].InsumoReceta.cantidad;
         const costoInsumo = recorrido2[j].InsumoReceta.costo;
         const nombreInsumo = recorrido2[j].nombre;
-        const costoFinal = costoInsumo * cantidad;
+        const costoFinal = costoInsumo * cantidad * cantidadInsumo;
         const cantidadTotal = cantidadInsumo * cantidad;
         const idInsumo = recorrido2[j].id;
+        const stockTabla = recorrido2[j].stock;
+
+
 
         const aux = {
           nombreInsumo: nombreInsumo,
           costoFinal: costoFinal,
           cantidadTotal: cantidadTotal,
           idInsumo: idInsumo,
+          stockReal:0,
         };
 
         if (!nombresInsumos.includes(nombreInsumo)) {
           nombresInsumos.push(nombreInsumo);
 
           arrayFinal.push(aux);
+          aux.stockReal = Number(stockTabla);
+          
         } else {
           let objetoBuscado = aux.nombreInsumo;
           let index = arrayFinal.findIndex(
@@ -74,9 +80,12 @@ router.post("/", async (req, res) => {
           if (index !== -1) {
             arrayFinal[index].costoFinal += aux.costoFinal;
             arrayFinal[index].cantidadTotal += aux.cantidadTotal;
+
           }
         }
       }
+
+
     }
 
     res.json(arrayFinal);
