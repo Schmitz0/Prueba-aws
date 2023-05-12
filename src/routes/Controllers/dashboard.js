@@ -18,23 +18,24 @@ router.get("/", async (req, res) => {
   } catch (error) {
     console.error(error);
     res
-      .status(500)
-      .send("Error al obtener el valor total del inventario de insumos");
+    .status(500)
+    .send("Error al obtener el valor total del inventario de insumos");
   }
 });
 
 router.post("/", async (req, res) => {
   const { proyeccion } = req.body;
-
+  console.log(proyeccion);
   try {
+    
     const insumo = await Insumo.findAll();
-    const arrayFinal = [];
+    const arrayFinal = [];    
     const nombresInsumos = [];
-
+    
     for (let i = 0; i < proyeccion.length; i++) {
       const id = proyeccion[i].recetaId;
       const cantidad = proyeccion[i].cantidad;
-
+      
       const recetaActual = await Receta.findByPk(id, {
         include: [
           {
@@ -43,9 +44,9 @@ router.post("/", async (req, res) => {
         ],
         order: [["createdAt", "DESC"]],
       });
-
+      
       const recorrido2 = recetaActual.Insumos;
-
+      
       for (let j = 0; j < recorrido2.length; j++) {
         const cantidadInsumo = recorrido2[j].InsumoReceta.cantidad;
         const costoInsumo = recorrido2[j].InsumoReceta.costo;
@@ -54,40 +55,45 @@ router.post("/", async (req, res) => {
         const cantidadTotal = cantidadInsumo * cantidad;
         const idInsumo = recorrido2[j].id;
         const stockTabla = recorrido2[j].stock;
-
-
-
+        
+        
+        
         const aux = {
           nombreInsumo: nombreInsumo,
           costoFinal: costoFinal,
           cantidadTotal: cantidadTotal,
           idInsumo: idInsumo,
           stockReal:0,
+          insumosRestantes:0,
         };
-
+        
+        
+        
         if (!nombresInsumos.includes(nombreInsumo)) {
           nombresInsumos.push(nombreInsumo);
-
+          
           arrayFinal.push(aux);
           aux.stockReal = Number(stockTabla);
+          aux.insumosRestantes= aux.stockReal - aux.cantidadTotal 
+          
           
         } else {
           let objetoBuscado = aux.nombreInsumo;
           let index = arrayFinal.findIndex(
             (objeto) => objeto.nombreInsumo === objetoBuscado
-          );
-
-          if (index !== -1) {
-            arrayFinal[index].costoFinal += aux.costoFinal;
-            arrayFinal[index].cantidadTotal += aux.cantidadTotal;
-
+            );
+            
+            if (index !== -1) {
+              arrayFinal[index].costoFinal += aux.costoFinal;
+              arrayFinal[index].cantidadTotal += aux.cantidadTotal;
+              
+            }
           }
         }
+        
+        
       }
-
-
-    }
-
+      
     res.json(arrayFinal);
   } catch (error) {
     console.error(error);
