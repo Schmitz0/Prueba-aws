@@ -1,16 +1,19 @@
 const { DataTypes } = require('sequelize');
 const Remito = require('./Remito');
-const Producto = require('./Producto');
+const Insumo = require('./Insumo');
 
 
 module.exports = (sequelize) => {
-sequelize.define('RemitoProducto', {
+sequelize.define('MovimientoInsumo', {
   cantidad: {
+    type: DataTypes.DECIMAL,
+    // allowNull: false
+  },
+  diferencia: {
     type: DataTypes.INTEGER,
-    allowNull: false
-  }
-}, {
-  tableName: 'remitos_productos'
+
+  },
+
 })
 };
 
