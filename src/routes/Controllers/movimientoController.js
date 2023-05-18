@@ -212,18 +212,21 @@ router.delete('/:id', async (req, res) => {
       movABorrar.tipoDeMovimiento === 'Receta'
     ) {
       const ins = movABorrar.Insumos;
-   
+ 
 
       for (let i = 0; i < ins.length; i++) {
         let insId = ins[i].MovimientoInsumo.InsumoId;
-        let insQuantity = ins[i].MovimientoInsumo.cantidad;
-
+        let insQuantity = Number(ins[i].MovimientoInsumo.cantidad);
+        
         const insumo = await Insumo.findByPk(insId);
-        let quantity = insumo.stock;
+        let quantity = Number(insumo.stock);
+
         await insumo.update({
           stock: quantity + insQuantity,
         });
+
       }
+
 
       movABorrar.destroy();
       res.status(200).send(movABorrar);

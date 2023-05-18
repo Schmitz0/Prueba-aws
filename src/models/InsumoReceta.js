@@ -3,13 +3,13 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
     sequelize.define("InsumoReceta", {
         cantidad : {
-            type : DataTypes.FLOAT          
+            type : DataTypes.DECIMAL          
         },
         costo : {
-            type : DataTypes.FLOAT          
+            type : DataTypes.DECIMAL          
         },
         costoPorBotella : {
-            type : DataTypes.FLOAT          
+            type : DataTypes.DECIMAL          
         }
 
        
