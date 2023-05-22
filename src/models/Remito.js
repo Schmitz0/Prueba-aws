@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
       autoIncrement: true
     },
     numeroRemito: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     fecha: {
