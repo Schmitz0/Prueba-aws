@@ -47,8 +47,11 @@ router.put('/:id', async (req, res) => {
   const changes = {}
   
   for (const property in req.body) {
-      if(property !== "role" || property !== "name" || property !== "imgUrl" || property !== "email") changes[property] = req.body[property]
+      if(property !== "role" || property !== "name" || property !== "imgUrl" || property !== "email" || property !== "password") changes[property] = req.body[property]
     }
+  changes.hashPassword = await bcrypt.hash(changes.password,8)
+  changes.password = ""
+  console.log(changes);
   try {
     console.log(changes, id);
       const usuario = await Usuario.findByPk(id)
