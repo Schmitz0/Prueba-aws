@@ -121,8 +121,7 @@ router.post("/filters", async (req, res) => {
   const { filters } = req.body;
   try {
 
-    console.log(filters);
-   
+  
     const fecha1 = moment(filters?.fechaMin, "DD-MM-YYYY").format("YYYY-MM-DD");
     const fecha2 = moment(filters?.fechaMax, "DD-MM-YYYY").format("YYYY-MM-DD");
 
