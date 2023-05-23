@@ -110,17 +110,42 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.post("/filters", async (req, res) => {
-  const { filters } = req.body;
-  try {
 
-    const fecha1 = filters.fechaMin ? moment(filters.fechaMin, "DD/MM/YYYY").format("YYYY-MM-DD") : null;
-    const fecha2 = filters.fechaMax ? moment(filters.fechaMax, "DD/MM/YYYY").format("YYYY-MM-DD") : null;
+    router.post("/filters", async (req, res) => {
+      const { filters } = req.body;
+      try {
+        const fecha1 = filters.fechaMin ? moment(filters.fechaMin, "DD/MM/YYYY").format("YYYY-MM-DD") : null;
+        const fecha2 = filters.fechaMax ? moment(filters.fechaMax, "DD/MM/YYYY").format("YYYY-MM-DD") : null;
+    
+        const whereClause = {};
+    
+        if (fecha1 && fecha2) {
+          if (fecha1 === fecha2) {
+            // Caso especial cuando fechaMin y fechaMax son iguales
+            whereClause.createdAt = {
+              [Op.between]: [`${fecha1} 00:00:00`, `${fecha2} 23:59:59`],
+            };
+          } else {
+            whereClause.createdAt = {
+              [Op.between]: [fecha1, fecha2],
+            };
+          }
+        } else if (fecha2) {
+          whereClause.createdAt = {
+            [Op.lte]: fecha2,
+          };
+        } else if (fecha1) {
+          whereClause.createdAt = {
+            [Op.gte]: fecha1,
+          };
+        } else {
+          whereClause.createdAt = {
+            [Op.not]: "cloudinary",
+          };
+        }
 
     const movimientos = await Movimiento.findAll({
-      where: {
-        createdAt: (fecha2 && fecha1) ? {[Op.between]: [fecha1, fecha2]} : fecha2 ? {[Op.lte]: fecha2} : fecha1 ? {[Op.gte]: fecha1} : {[Op.not]: "cloudinary"}
-      },
+      where: whereClause,
       include: [
         {
           model: Insumo,

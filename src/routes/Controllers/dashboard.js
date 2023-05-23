@@ -103,9 +103,13 @@ router.post("/", async (req, res) => {
 router.post('/insumoCantidad', async (req, res) => {
   const { filters } = req.body;
 
-  console.log(filters);
+
 
   try {
+
+    if (!filters) {
+      throw new Error('Faltan Datos');
+    }
     const productData = await Movimiento.findAll({
       where: {
         [Op.and]: [
@@ -182,5 +186,78 @@ router.get('/insumosPrecios', async (req, res) => {
       res.status(400).send(error.message)
       }
 })
+
+
+router.post("/insumoControl", async (req, res) => {
+  const { filters } = req.body;
+
+
+  try {
+    if (!filters) {
+      throw new Error('Faltan Datos');
+    }
+
+    const response = await Movimiento.findAll({
+      where: {
+        [Op.and]: [
+          Sequelize.where(
+            Sequelize.literal(`EXTRACT(YEAR FROM "createdAt")`),
+            filters.year
+          ),
+          Sequelize.where(
+            Sequelize.literal(`EXTRACT(MONTH FROM "createdAt")`),
+            parseInt(filters.month, 10)
+          ),
+          {
+            tipoDeMovimiento: { [Op.or]: ["Control de stock", "Movimiento de insumo"] },
+          }
+        ]
+      },
+      include: [
+        {
+          model: Insumo,
+          attributes: ['id', 'nombre', 'precio','categoria'],
+          through: { attributes: ['cantidad'] }
+        },
+        {
+          model: MovimientoInsumo,
+          attributes: ['cantidad'],
+          include: {
+            model: Insumo,
+            attributes: ['id', 'nombre', 'precio','categoria']
+          }
+        }
+      ],
+      order: [['createdAt', 'DESC']],
+      limit: 10
+    });
+
+
+
+
+// Obtener el objeto con el insumo, cantidad y categoría
+const result = Object.values(response.reduce((obj, movimiento) => {
+  movimiento.Insumos.forEach((insumo) => {
+    if (obj[insumo.id]) {
+      obj[insumo.id].cantidad += 1;
+    } else {
+      obj[insumo.id] = {
+        nombre: insumo.nombre,
+        cantidad: 1,
+        categoria: insumo.categoria
+      };
+    }
+  });
+  return obj;
+}, {}));
+
+
+
+    return res.status(200).json(result);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
+
 
 module.exports = router;
