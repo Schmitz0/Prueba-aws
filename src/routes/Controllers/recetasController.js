@@ -3,10 +3,11 @@ const { Receta } = require('../../db.js');
 const { Insumo } = require('../../db.js');
 const { Movimiento } = require('../../db.js');
 const {InsumoReceta} = require('../../db.js');
+const userExtractor = require('../middleware/userExtractor.js');
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', userExtractor, async (req, res) => {
   try {
     const recetas = await Receta.findAll({
       include: [

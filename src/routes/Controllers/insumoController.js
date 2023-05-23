@@ -1,10 +1,12 @@
 const { Router } = require('express');
 const { Insumo } = require('../../db.js');
 const { Op, Sequelize } = require('sequelize');
+const userExtractor = require('../middleware/userExtractor.js');
+const authMiddleware = require('../middleware/userExtractor.js');
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', userExtractor, async (req, res) => {
   try {
     const insumo = await Insumo.findAll({
       order: [['id', 'ASC']],
