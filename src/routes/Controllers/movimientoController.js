@@ -56,6 +56,8 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
+  const name = req.get('name')
+
   const { tipoDeMovimiento, insumos, motivo,tipo } = req.body;
   try {
     if (tipoDeMovimiento === 'Movimiento de insumo' && tipo === 'suma') {
@@ -70,6 +72,10 @@ router.post('/', async (req, res) => {
         await insumo.update({
           stock: Number(quantity) + Number(cantidad),
         });
+
+        await movimiento.update({
+          usuario:name
+        })
       }
 
       res.json(movimiento);
@@ -84,6 +90,12 @@ router.post('/', async (req, res) => {
       await insumo.update({
         stock: Number(quantity) - Number(cantidad),
       });
+      
+
+      await movimiento.update({
+        usuario:name
+      })
+
     }
 
     res.json(movimiento);
@@ -100,8 +112,13 @@ router.post('/', async (req, res) => {
         await insumo.update({
           stock: Number(quantity) + Number(diferencia),
         });
-      }
 
+        await movimiento.update({
+          usuario:name
+        })
+        
+      }
+        
       res.json(movimiento);
     }
   } catch (error) {
@@ -174,6 +191,8 @@ router.post('/', async (req, res) => {
 });
 
 router.post('/:id', async (req, res) => {
+
+  const name = req.get('name')
   const { tipoDeMovimiento, motivo, cantidadProducida } = req.body;
   const { id } = req.params;
 
@@ -184,6 +203,7 @@ router.post('/:id', async (req, res) => {
     if (tipoDeMovimiento === 'Receta') {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
       await movimiento.update({ cantidadProducida });
+      await movimiento.update({usuario:name})
       const receta = await Receta.findByPk(id, {
         include: [
           {

@@ -10,6 +10,9 @@ module.exports = (sequelize) => {
         costoPorReceta: {
             type: DataTypes.FLOAT,
         },
+        usuario: {
+            type: DataTypes.STRING,
+        },
     }
     
   )

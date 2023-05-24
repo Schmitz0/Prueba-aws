@@ -16,6 +16,9 @@ module.exports = (sequelize) => {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
+    usuario: {
+      type: DataTypes.STRING,
+    },
   },
   )
 };
