@@ -6,7 +6,7 @@ const authMiddleware = require('../middleware/userExtractor.js');
 
 const router = Router();
 
-router.get('/', userExtractor, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const insumo = await Insumo.findAll({
       order: [['id', 'ASC']],
@@ -49,6 +49,9 @@ router.get('/:id', async (req, res) => {
 
 
 router.post('/', async (req, res) => {
+
+  const name = req.get('name')
+
   const {
     nombre,
     precio,
@@ -71,7 +74,9 @@ router.post('/', async (req, res) => {
       imgUrl,
       unidad,
       categoria,
+      usuario:name,
     });
+
     res.json(insumo);
   } catch (error) {
     console.error(error);
@@ -96,6 +101,8 @@ router.post('/filter', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
+
+  const name = req.get('name')
   const { id } = req.params;
   const changes = {};
 
@@ -108,6 +115,7 @@ router.put('/:id', async (req, res) => {
     const insumo = await Insumo.findByPk(id);
 
     await insumo.update(changes);
+    await insumo.update({usuario:name});
 
     return res.status(200).json(insumo);
   } catch (error) {

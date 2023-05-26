@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
       const remitos = await Remito.findAll({
         include: [{
           model: Insumo,
-          attributes: ['id', 'nombre', 'precio'],
+          attributes: ['id', 'nombre', 'precio','usuario'],
           through: { attributes: ['cantidad'] }
         },
         {
@@ -60,12 +60,16 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+
+  const name = req.get('name')
   const { insumos, proveedorId,numeroRemito,fecha } = req.body;
+
   try {
 
     const aux = moment(fecha, "DD-MM-YYYY").format("YYYY-MM-DD");
 
     const remito = await Remito.create({ proveedorId,numeroRemito,fecha:aux });
+    await remito.update({usuario:name})
     for (const { id, cantidad, precio } of insumos) {
       const insumo = await Insumo.findByPk(id);
       let quantity = insumo.stock;

@@ -46,6 +46,9 @@ module.exports = (sequelize) => {
       imgUrl: {
         type: DataTypes.TEXT,
       },
+      usuario: {
+        type: DataTypes.STRING,
+      },
     },
   );
 };

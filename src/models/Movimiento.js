@@ -24,6 +24,9 @@ module.exports = (sequelize) => {
         defaultValue: DataTypes.NOW,
         allowNull: false,
       },
+      usuario: {
+        type: DataTypes.STRING,
+      },
     },
   );
 };
