@@ -191,7 +191,6 @@ router.get('/insumosPrecios', async (req, res) => {
 router.post("/insumoControl", async (req, res) => {
   const { filters } = req.body;
 
-
   try {
     if (!filters) {
       throw new Error('Faltan Datos');
@@ -209,7 +208,7 @@ router.post("/insumoControl", async (req, res) => {
             parseInt(filters.month, 10)
           ),
           {
-            tipoDeMovimiento: { [Op.or]: ["Control de stock", "Movimiento de insumo"] },
+            tipoDeMovimiento: { [Op.or]: ["Movimiento de insumo"] },
           }
         ]
       },

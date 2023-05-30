@@ -127,39 +127,40 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post("/filters", async (req, res) => {
+  const { filters } = req.body;
 
-    router.post("/filters", async (req, res) => {
-      const { filters } = req.body;
-      try {
-        const fecha1 = filters.fechaMin ? moment(filters.fechaMin, "DD/MM/YYYY").format("YYYY-MM-DD") : null;
-        const fecha2 = filters.fechaMax ? moment(filters.fechaMax, "DD/MM/YYYY").format("YYYY-MM-DD") : null;
-    
-        const whereClause = {};
-    
-        if (fecha1 && fecha2) {
-          if (fecha1 === fecha2) {
-            // Caso especial cuando fechaMin y fechaMax son iguales
-            whereClause.createdAt = {
-              [Op.between]: [`${fecha1} 00:00:00`, `${fecha2} 23:59:59`],
-            };
-          } else {
-            whereClause.createdAt = {
-              [Op.between]: [fecha1, fecha2],
-            };
-          }
-        } else if (fecha2) {
-          whereClause.createdAt = {
-            [Op.lte]: fecha2,
-          };
-        } else if (fecha1) {
-          whereClause.createdAt = {
-            [Op.gte]: fecha1,
-          };
-        } else {
-          whereClause.createdAt = {
-            [Op.not]: "cloudinary",
-          };
-        }
+   try {
+    const fecha1 = filters.fechaMin ? moment(filters.fechaMin, "DD/MM/YYYY").format("YYYY-MM-DD") : null;
+    const fecha2 = filters.fechaMax ? moment(filters.fechaMax, "DD/MM/YYYY").format("YYYY-MM-DD") : null;
+    const insumoNombre = filters.insumo ? filters.insumo : null;
+
+    const whereClause = {};
+
+    if (fecha1 && fecha2) {
+      if (fecha1 === fecha2) {
+        // Caso especial cuando fechaMin y fechaMax son iguales
+        whereClause.createdAt = {
+          [Op.between]: [`${fecha1} 00:00:00`, `${fecha2} 23:59:59`],
+        };
+      } else {
+        whereClause.createdAt = {
+          [Op.between]: [fecha1, fecha2],
+        };
+      }
+    } else if (fecha2) {
+      whereClause.createdAt = {
+        [Op.lte]: fecha2,
+      };
+    } else if (fecha1) {
+      whereClause.createdAt = {
+        [Op.gte]: fecha1,
+      };
+    } else {
+      whereClause.createdAt = {
+        [Op.not]: "cloudinary",
+      };
+    }
 
     const movimientos = await Movimiento.findAll({
       where: whereClause,
@@ -167,22 +168,24 @@ router.post('/', async (req, res) => {
         {
           model: Insumo,
           attributes: ['id', 'nombre', 'precio'],
-          through: { attributes: ['cantidad'] }
-        },
+          through: { attributes: ['cantidad'] },
+          where: {
+            nombre: insumoNombre ? {[Op.like]: insumoNombre} : {[Op.not]: "cloudinary"}
+            },
+          },
         {
           model: MovimientoInsumo,
           attributes: ['cantidad'],
           include: {
             model: Insumo,
-            attributes: ['id', 'nombre', 'precio']
-          }
-        }
+            attributes: ['id', 'nombre', 'precio'],
+          },
+        },
       ],
       order: [['createdAt', 'DESC']],
       limit: 10
     });
 
-  
     res.json(movimientos);
   } catch (error) {
     console.error(error);
@@ -195,8 +198,6 @@ router.post('/:id', async (req, res) => {
   const name = req.get('name')
   const { tipoDeMovimiento, motivo, cantidadProducida } = req.body;
   const { id } = req.params;
-
-
 
   try {
 
