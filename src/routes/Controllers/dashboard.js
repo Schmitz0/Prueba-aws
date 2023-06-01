@@ -188,7 +188,7 @@ router.get('/insumosPrecios', async (req, res) => {
 })
 
 
-router.post("/insumoControl", async (req, res) => {
+router.post("/insumoControl", async (req, res) => { 
   const { filters } = req.body;
 
   try {
