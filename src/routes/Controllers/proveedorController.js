@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/", async (req, res) => {
     try {
-        const proveedores = await Proveedor.findAll();
+        const proveedores = await Proveedor.findAll({order: [['id', 'ASC']]});
         res.json(proveedores);
       } catch (error) {
         console.error(error);
