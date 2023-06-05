@@ -10,7 +10,7 @@ sequelize.define('MovimientoInsumo', {
     // allowNull: false
   },
   diferencia: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.DECIMAL,
 
   },
 
