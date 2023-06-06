@@ -95,10 +95,11 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { name, insumos } = req.body;
+  const { name, imgUrl, insumos } = req.body;
   console.log(req.body);
   try {
     const receta = await Receta.create({ name });
+    if(imgUrl) await receta.update({imgUrl});
     for (const { id, cantidad, costo, costoPorBotella } of insumos) {
       const insumo = await Insumo.findByPk(id);
       let precio = insumos.precio;
