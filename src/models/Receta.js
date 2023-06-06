@@ -13,6 +13,10 @@ module.exports = (sequelize) => {
         usuario: {
             type: DataTypes.STRING,
         },
+        imgUrl:{
+            type: DataTypes.TEXT,
+            defaultValue: "https://www.aguaesencial.com/assets/images/soda.png",
+        },
     }
     
   )
