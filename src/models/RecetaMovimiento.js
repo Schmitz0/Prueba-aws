@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
     sequelize.define("RecetaMovimiento", {
         cantidadProducida: {
-            type : DataTypes.INTEGER
+            type : DataTypes.DECIMAL
         },
         
     },

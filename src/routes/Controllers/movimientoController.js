@@ -222,7 +222,7 @@ router.post('/:id', async (req, res) => {
         const insumoACambiar = await Insumo.findByPk(insumo);
         const tot = cantidadUsada*cantidadProducida;
         await insumoACambiar.update({
-          stock: insumoACambiar.stock-tot,
+          stock: Number(insumoACambiar.stock)-Number(tot),
         });
         await movimiento.update({motivo:receta.name})
           await movimiento.addInsumo(insumo, { through: { cantidad:tot } });
@@ -268,7 +268,7 @@ router.delete('/:id', async (req, res) => {
         let quantity = Number(insumo.stock);
 
         await insumo.update({
-          stock: quantity + insQuantity,
+          stock: Number(quantity) + Number(insQuantity),
         });
 
       }
@@ -286,7 +286,7 @@ router.delete('/:id', async (req, res) => {
         const insumo = await Insumo.findByPk(insId);
         let quantity = insumo.stock;
         await insumo.update({
-          stock: quantity - insDiferency,
+          stock: Number(quantity) - Number(insDiferency),
         });
       }
 
