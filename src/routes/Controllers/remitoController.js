@@ -76,7 +76,7 @@ router.post("/", async (req, res) => {
       await remito.addInsumo(insumo, { through: { cantidad } });
       await insumo.update({ precio });
       await insumo.update({
-        stock: quantity + cantidad,
+        stock: Number(quantity) + Number(cantidad),
       });
     }
     res.json(remito);
@@ -109,7 +109,7 @@ router.delete("/:id", async (req, res) => {
       const insumo = await Insumo.findByPk(insId);
       let quantity = insumo.stock;
       await insumo.update({
-        stock: quantity - insQuantity,
+        stock: Number(quantity) - Number(insQuantity),
       });
     }
 

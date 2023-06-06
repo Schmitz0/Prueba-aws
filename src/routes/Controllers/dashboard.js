@@ -186,7 +186,7 @@ router.get('/insumosPrecios', async (req, res) => {
       res.status(400).send(error.message)
       }
 })
-
+ 
 
 router.post("/insumoControl", async (req, res) => { 
   const { filters } = req.body;
