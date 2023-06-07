@@ -70,17 +70,17 @@ conn.sync({ force: true }).then(() => {
     ]
 
     const proveedores = [
-      { nombre: "Cristalpet", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
-      { nombre: "Hilosplásticos", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
-      { nombre: "Linde", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
-      { nombre: "Multiflex", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
-      { nombre: "Nortesur", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
-      { nombre: "Pamer", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
-      { nombre: "Pandoplast", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
-      { nombre: "RBS", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
-      { nombre: "IMESI", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
-      { nombre: "Ecoflex", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
-      { nombre: "Percat", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890" },
+      { nombre: "Cristalpet", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890", direccion:"Av. Siempreviva 777", codigoPostal:"ABC123" },
+      { nombre: "Hilosplásticos", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890", direccion:"Av. Siempreviva 777", codigoPostal:"ABC123" },
+      { nombre: "Linde", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890", direccion:"Av. Siempreviva 777", codigoPostal:"ABC123" },
+      { nombre: "Multiflex", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890", direccion:"Av. Siempreviva 777", codigoPostal:"ABC123" },
+      { nombre: "Nortesur", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890", direccion:"Av. Siempreviva 777", codigoPostal:"ABC123" },
+      { nombre: "Pamer", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890", direccion:"Av. Siempreviva 777", codigoPostal:"ABC123" },
+      { nombre: "Pandoplast", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890", direccion:"Av. Siempreviva 777", codigoPostal:"ABC123" },
+      { nombre: "RBS", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890", direccion:"Av. Siempreviva 777", codigoPostal:"ABC123" },
+      { nombre: "IMESI", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890", direccion:"Av. Siempreviva 777", codigoPostal:"ABC123" },
+      { nombre: "Ecoflex", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890", direccion:"Av. Siempreviva 777", codigoPostal:"ABC123" },
+      { nombre: "Percat", nombreContacto: "Jorge Luis Borges", descripcion: "Este es un proveedor excelente", email: "abc@gmail.com", telefono: "1234567890", direccion:"Av. Siempreviva 777", codigoPostal:"ABC123" },
     ]
 
     const usuario = [
