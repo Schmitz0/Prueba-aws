@@ -60,7 +60,7 @@ router.put('/precios', async (req, res) => {
      
         await insumoReceta.update({ costo: precioAct });
         await insumoReceta.update({ costoPorBotella: costPorBottle });
-      
+    
       }
 
       
@@ -96,19 +96,17 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const { name, imgUrl, insumos } = req.body;
-  console.log(req.body);
   try {
     const receta = await Receta.create({ name });
-    if(imgUrl) await receta.update({imgUrl});
-    for (const { id, cantidad, costo, costoPorBotella } of insumos) {
+    // if(imgUrl) await receta.update({imgUrl});
+    for (const { id, cantidad } of insumos) {
       const insumo = await Insumo.findByPk(id);
-      let precio = insumos.precio;
+      let costo = insumo.precio;
+      let costoPorBotella = costo * cantidad;
       await receta.addInsumo(insumo, { through: { cantidad } });
-      await receta.addInsumo(insumo, { through: { costo } });
+      await receta.addInsumo(insumo, { through: { costo: costoPorBotella } });
       await receta.addInsumo(insumo, { through: { costoPorBotella } });
-      await insumo.update({
-        precio: cantidad * costoPorBotella,
-      });
+      // await insumo.update({ precio: cantidad * costoPorBotella });
     }
     res.json(receta);
   } catch (error) {
@@ -117,6 +115,63 @@ router.post('/', async (req, res) => {
   }
 });
 
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+////////////////////// P U T //////////////////////////////////
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, imgUrl, insumoId, cantidad } = req.body;
+  // console.log(name, id);
+  try {
+    const receta = await Receta.findByPk( id );
+    if(imgUrl) await receta.update({imgUrl});
+    if(name) await receta.update({name});
+    if(insumoId || cantidad){ 
+
+    const insumo = await Insumo.findByPk(insumoId);
+    let costo = insumo.precio;
+      let costoPorBotella = costo * cantidad;
+      await receta.addInsumo(insumo, { through: { cantidad } });
+      await receta.addInsumo(insumo, { through: { costo: costoPorBotella } });
+      await receta.addInsumo(insumo, { through: { costoPorBotella } });
+    }
+    // for (const { id, cantidad, costo, costoPorBotella } of insumos) {
+    //   const insumo = await Insumo.findByPk(id);
+    //   let precio = insumos.precio;
+    //   await receta.addInsumo(insumo, { through: { cantidad } });
+    // }
+    res.json(receta);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al modificar la receta');
+  }
+});
+
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const rowId = req.body;
+    
+    console.log();
+    const receta = await Receta.findByPk(id);
+    const insumoABorrar = await Insumo.findByPk(insumoId);
+    
+    const insumosReceta = await receta.getInsumos();
+    
+    if (insumosReceta.some(insumo => insumo.id === insumoABorrar.id)) {
+      await receta.removeInsumo(insumoABorrar);
+      res.status(200).send(`El insumo ${insumoABorrar.nombre} de la receta de id ${id} fue borrado con éxito.`);
+    } else {
+      res.status(400).send(`El insumo ${insumoABorrar.nombre} no está asociado a la receta de id ${id}.`);
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+});
 
 router.delete('/:id', async (req, res) => {
   try {
