@@ -14,6 +14,10 @@ module.exports = (sequelize) => {
       motivo: {
         type: DataTypes.STRING,
       },
+      estado:{
+        type: DataTypes.BOOLEAN,
+        defaultValue:true,
+      },
       createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,

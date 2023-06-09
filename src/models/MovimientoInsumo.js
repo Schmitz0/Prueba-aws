@@ -11,8 +11,15 @@ sequelize.define('MovimientoInsumo', {
   },
   diferencia: {
     type: DataTypes.DECIMAL,
-
   },
+  stockPrevio:{
+    type: DataTypes.DECIMAL,
+  },
+
+  stockFinal:{
+    type:DataTypes.DECIMAL
+  }
+ 
 
 })
 };
