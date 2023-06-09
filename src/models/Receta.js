@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
         name: {
             type: DataTypes.STRING(50),
             allowNull: false,
-            unique:true,
+            // unique:true,
         },
         costoPorReceta: {
             type: DataTypes.FLOAT,
