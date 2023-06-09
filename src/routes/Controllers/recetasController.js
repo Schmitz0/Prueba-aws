@@ -154,24 +154,45 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const rowId = req.body;
-    
-    console.log();
-    const receta = await Receta.findByPk(id);
+    const { insumoId } = req.body;
+
+    console.log(insumoId);
+
+    const receta = await Receta.findByPk(id, {
+      include: [
+        {
+          model: Insumo,
+        },
+      ],
+    });
+
     const insumoABorrar = await Insumo.findByPk(insumoId);
-    
-    const insumosReceta = await receta.getInsumos();
-    
-    if (insumosReceta.some(insumo => insumo.id === insumoABorrar.id)) {
-      await receta.removeInsumo(insumoABorrar);
-      res.status(200).send(`El insumo ${insumoABorrar.nombre} de la receta de id ${id} fue borrado con éxito.`);
-    } else {
-      res.status(400).send(`El insumo ${insumoABorrar.nombre} no está asociado a la receta de id ${id}.`);
+
+    if (!insumoABorrar) {
+      res.status(400).send(`El insumo de id ${insumoId} no existe.`);
+      return;
     }
+
+    const insumosReceta = await receta.getInsumos();
+
+    if (!insumosReceta.some((insumo) => insumo.id === insumoABorrar.id)) {
+      res.status(400).send(`El insumo de id ${insumoId} no está asociado a la receta de id ${id}.`);
+      return;
+    }
+
+    await receta.removeInsumo(insumoABorrar);
+
+    res
+      .status(200)
+      .send(`El insumo de id ${insumoId} fue borrado con éxito de la receta de id ${id}.`);
   } catch (error) {
-    res.status(400).send(error.message);
+    console.log(error);
+    res.status(500).send('Ocurrió un error al borrar el insumo.');
   }
 });
+
+
+
 
 router.delete('/:id', async (req, res) => {
   try {
