@@ -17,7 +17,6 @@ module.exports = (sequelize) => {
         },
         role: { 
             type: DataTypes.STRING,
-            defaultValue: "User",
         },
         imgUrl:{
             type: DataTypes.TEXT,
