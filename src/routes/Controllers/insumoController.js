@@ -125,9 +125,13 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
+    const name = req.get("name");
     const { id } = req.params;
     const insumoABorrar = await Insumo.findByPk(id);
     if (insumoABorrar) {
+      await insumoABorrar.update({
+        usuario: name,
+      });
       await insumoABorrar.destroy();
       res.status(200).send(`El insumo de id ${id} fue borrado con éxito`);
     }

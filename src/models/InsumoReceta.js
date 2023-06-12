@@ -1,18 +1,21 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-    sequelize.define("InsumoReceta", {
-        cantidad : {
-            type : DataTypes.DECIMAL          
-        },
-        costo : {
-            type : DataTypes.DECIMAL          
-        },
-        costoPorBotella : {
-            type : DataTypes.DECIMAL          
-        }
-
-       
+  sequelize.define(
+    'InsumoReceta',
+    {
+      cantidad: {
+        type: DataTypes.DECIMAL,
+      },
+      costo: {
+        type: DataTypes.DECIMAL,
+      },
+      costoPorBotella: {
+        type: DataTypes.DECIMAL,
+      },
     },
-  )
-}
+    {
+      paranoid: true,
+    }
+  );
+};
