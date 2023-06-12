@@ -8,6 +8,7 @@ const { MovimientoInsumo } = require("../../db.js");
 const { RecetaMovimiento } = require("../../db.js");
 const { updateInsumo } = require("../Controllers/utils.js");
 const moment = require("moment");
+const Remito = require("../../models/Remito.js");
 
 const router = Router();
 
@@ -249,13 +250,15 @@ router.post("/filters", async (req, res) => {
       };
     }
 
+    if (filters.estado) {
+      whereClause.estado = filters.estado;
+    }
+
     const movimientos = await Movimiento.findAll({
       where: whereClause,
       include: [
         {
           model: Insumo,
-          attributes: ["id", "nombre", "precio"],
-          through: { attributes: ["cantidad"] },
           where: {
             nombre: insumoNombre
               ? { [Op.like]: insumoNombre }
@@ -264,11 +267,6 @@ router.post("/filters", async (req, res) => {
         },
         {
           model: MovimientoInsumo,
-          attributes: ["cantidad"],
-          include: {
-            model: Insumo,
-            attributes: ["id", "nombre", "precio"],
-          },
         },
       ],
       order: [["createdAt", "DESC"]],

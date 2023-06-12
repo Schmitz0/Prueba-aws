@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
+
   sequelize.define(
     'Usuario',
     {
@@ -19,12 +20,13 @@ module.exports = (sequelize) => {
       },
       role: {
         type: DataTypes.STRING,
-        defaultValue: 'User',
+
       },
       imgUrl: {
         type: DataTypes.TEXT,
         defaultValue: 'https://angol.cl/images/pagina_principal/noImage.jpg',
       },
+
     },
     {
       paranoid: true,
