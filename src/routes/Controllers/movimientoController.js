@@ -141,11 +141,6 @@ router.post("/", async (req, res) => {
         await movimiento.addInsumo(insumo, {
           through: { stockPrevio: quantity },
         });
-
-        // await insumo.update({
-        //   stock: Number(quantity) + Number(stockFinal),
-        // });
-
         await movimiento.update({
           usuario: name,
           estado: false,
@@ -162,8 +157,7 @@ router.post("/", async (req, res) => {
 
 router.post("/historial/:id", async (req, res) => {
   const name = req.get("name");
-  const { id } = req.params; // Obtén el ID del movimiento desde req.params
-  // const { tipoDeMovimiento, insumos} = req.body;
+  const { id } = req.params; 
 
   try {
     
@@ -184,14 +178,6 @@ router.post("/historial/:id", async (req, res) => {
       console.log(quantity);
         const stockFinal = movimiento.Insumos[i].MovimientoInsumo.stockFinal
 
-        // const stockFinal = quantity - cantidad;
-        // const diferencia = cantidad - quantity;
-
-        // await movimiento.addInsumo(insumo, { through: { cantidad } });
-        // await movimiento.addInsumo(insumo, { through: { diferencia: diferencia } });
-        // await movimiento.addInsumo(insumo, { through: { stockFinal: cantidad } });
-        // await movimiento.addInsumo(insumo, { through: { stockPrevio: quantity } });
-
         await insumo.update({
           stock: Number(stockFinal),
         });
@@ -210,6 +196,43 @@ router.post("/historial/:id", async (req, res) => {
     res.status(500).send("Error al crear el movimiento");
   }
 });
+router.post("/historial/control/:id", async (req, res) => {
+  const name = req.get("name");
+  const { id } = req.params;
+  const { InsumoId, stockFinal } = req.body;
+
+ 
+  try {
+    const movimiento = await Movimiento.findAll({
+ 
+      include: [
+        {
+          model: Insumo,
+          where: {
+            id: InsumoId
+          },
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+      limit: 10,
+    });
+
+    const insumos = movimiento[0].Insumos[0].MovimientoInsumo
+    const stockPrev = movimiento[0].Insumos[0].MovimientoInsumo.stockPrevio
+
+      await insumos.update({
+        stockFinal: Number(stockFinal),
+        diferencia : Number(stockFinal) - Number(stockPrev) ,
+      });
+      res.json(movimiento);    
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al crear el movimiento");
+  }
+});
+
+
+
 
 router.post("/filters", async (req, res) => {
   const { filters } = req.body;
