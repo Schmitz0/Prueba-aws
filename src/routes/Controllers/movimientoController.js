@@ -87,6 +87,7 @@ router.post("/", async (req, res) => {
 
         await movimiento.update({
           usuario: name,
+          tipoDeOperacion:tipo,
         });
       }
 
@@ -119,6 +120,7 @@ router.post("/", async (req, res) => {
 
         await movimiento.update({
           usuario: name,
+          tipoDeOperacion:tipo,
         });
       }
 
@@ -196,6 +198,7 @@ router.post("/historial/:id", async (req, res) => {
     res.status(500).send("Error al crear el movimiento");
   }
 });
+
 router.post("/historial/control/:id", async (req, res) => {
   const name = req.get("name");
   const { id } = req.params;
@@ -372,7 +375,29 @@ router.delete("/:id", async (req, res) => {
 
     if (!movABorrar) throw new Error("El ID del movimiento no fue encontrado");
 
+
     if (
+      movABorrar.tipoDeMovimiento === "Movimiento de insumo" &&
+      movABorrar.tipoDeOperacion === "suma"
+    ) {
+      const ins = movABorrar.Insumos;
+
+      for (let i = 0; i < ins.length; i++) {
+        let insId = ins[i].MovimientoInsumo.InsumoId;
+        let insQuantity = Number(ins[i].MovimientoInsumo.cantidad);
+
+        const insumo = await Insumo.findByPk(insId);
+        let quantity = Number(insumo.stock);
+
+        await insumo.update({
+          stock: Number(quantity) - Number(insQuantity),
+        });
+      }
+
+      movABorrar.destroy();
+      res.status(200).send(movABorrar);
+
+    }else if (
       movABorrar.tipoDeMovimiento === "Movimiento de insumo" ||
       movABorrar.tipoDeMovimiento === "Receta"
     ) {
