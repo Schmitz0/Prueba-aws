@@ -1,6 +1,10 @@
 const { Router } = require("express");
 const { Usuario } = require("../../db.js");
 const bcrypt = require('bcrypt');
+// const { Movimiento } = require("../../db.js");
+// const { Insumo } = require("../../db.js");
+// const { Op } = require('sequelize');
+
 
 const router = Router();
 
@@ -74,5 +78,22 @@ router.delete('/:id', async (req, res) => {
       res.status(400).send(error.message)
   }
 })
+
+// router.post('/registro/:id', async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const movimientos = await Insumo.findAll({
+//       where: {
+//         usuario: {
+//           [Op.eq]: id,
+//         },
+//       },
+//     });
+//     console.log(id, movimientos);
+//     res.json(movimientos);
+//   } catch (error) {
+//     res.status(400).send(error.message)
+//   }
+// })
 
 module.exports = router;
