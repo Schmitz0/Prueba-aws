@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/", async (req, res) => {
     try {
-        const proveedores = await Proveedor.findAll();
+        const proveedores = await Proveedor.findAll({order: [['id', 'ASC']]});
         res.json(proveedores);
       } catch (error) {
         console.error(error);
@@ -29,9 +29,9 @@ router.get("/:id", async (req, res) => {
 )
 
 router.post("/", async (req, res) => {
-    const { nombre, nombreContacto, email, descripcion, telefono} = req.body;
+    const { nombre, nombreContacto, email, descripcion, telefono, direccion, codigoPostal} = req.body;
     try {
-      const proveedor = await Proveedor.create({ nombre, nombreContacto, email, descripcion, telefono });
+      const proveedor = await Proveedor.create({ nombre, nombreContacto, email, descripcion, telefono, direccion, codigoPostal });
       res.json(proveedor);
     } catch (error) {
       console.error(error);

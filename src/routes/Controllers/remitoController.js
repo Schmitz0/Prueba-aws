@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
       const remitos = await Remito.findAll({
         include: [{
           model: Insumo,
-          attributes: ['id', 'nombre', 'precio'],
+          attributes: ['id', 'nombre', 'precio','usuario'],
           through: { attributes: ['cantidad'] }
         },
         {
@@ -60,19 +60,23 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+
+  const name = req.get('name')
   const { insumos, proveedorId,numeroRemito,fecha } = req.body;
+
   try {
 
     const aux = moment(fecha, "DD-MM-YYYY").format("YYYY-MM-DD");
 
     const remito = await Remito.create({ proveedorId,numeroRemito,fecha:aux });
+    await remito.update({usuario:name})
     for (const { id, cantidad, precio } of insumos) {
       const insumo = await Insumo.findByPk(id);
       let quantity = insumo.stock;
       await remito.addInsumo(insumo, { through: { cantidad } });
       await insumo.update({ precio });
       await insumo.update({
-        stock: quantity + cantidad,
+        stock: Number(quantity) + Number(cantidad),
       });
     }
     res.json(remito);
@@ -105,7 +109,7 @@ router.delete("/:id", async (req, res) => {
       const insumo = await Insumo.findByPk(insId);
       let quantity = insumo.stock;
       await insumo.update({
-        stock: quantity - insQuantity,
+        stock: Number(quantity) - Number(insQuantity),
       });
     }
 
@@ -121,8 +125,7 @@ router.post("/filters", async (req, res) => {
   const { filters } = req.body;
   try {
 
-    console.log(filters);
-   
+  
     const fecha1 = moment(filters?.fechaMin, "DD-MM-YYYY").format("YYYY-MM-DD");
     const fecha2 = moment(filters?.fechaMax, "DD-MM-YYYY").format("YYYY-MM-DD");
 

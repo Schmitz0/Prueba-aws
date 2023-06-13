@@ -12,14 +12,14 @@ const userExtractor = require("./middleware/userExtractor.js");
 
 const router = Router();
 
-router.use("/insumo", insumo);
-router.use("/usuario", usuario);
+router.use("/insumo", userExtractor, insumo);
+router.use("/usuario", userExtractor, usuario);
 router.use("/users", users);
-router.use("/receta", receta);
-router.use("/proveedor", proveedor);
-router.use("/remito",  remito);
-router.use("/dashboard",  dashboard);
-// router.use("/login",login);
-router.use("/movimiento",  movimiento);
+router.use("/receta", userExtractor, receta);
+router.use("/proveedor", userExtractor, proveedor);
+router.use("/remito", userExtractor,  remito);
+router.use("/dashboard", userExtractor,  dashboard);
+// router.use("/login", userExtractor,login);
+router.use("/movimiento", userExtractor,  movimiento);
 
 module.exports = router;

@@ -14,6 +14,10 @@ module.exports = (sequelize) => {
       motivo: {
         type: DataTypes.STRING,
       },
+      estado:{
+        type: DataTypes.BOOLEAN,
+        defaultValue:true,
+      },
       createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
@@ -24,6 +28,15 @@ module.exports = (sequelize) => {
         defaultValue: DataTypes.NOW,
         allowNull: false,
       },
+      usuario: {
+        type: DataTypes.STRING,
+      },
+      tipoDeOperacion: {
+        type: DataTypes.STRING,
+      },
     },
+    {
+      paranoid: true,
+    }
   );
 };
