@@ -14,8 +14,5 @@ module.exports = (sequelize) => {
         type: DataTypes.DECIMAL,
       },
     },
-    {
-      paranoid: true,
-    }
   );
 };
