@@ -49,8 +49,8 @@ router.get('/:id', async (req, res) => {
 
 
 router.post('/', async (req, res) => {
-
-  const name = req.get('name')
+  const { userid } = req.headers;
+  // const name = req.get('userid')
 
   const {
     nombre,
@@ -74,7 +74,7 @@ router.post('/', async (req, res) => {
       imgUrl,
       unidad,
       categoria,
-      usuario:name,
+      usuario:userid,
     });
 
     res.json(insumo);
@@ -101,8 +101,8 @@ router.post('/filter', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-
-  const name = req.get('name')
+  const{ userid } = req.headers;
+  // const name = req.get('name')
   const { id } = req.params;
   const changes = {};
 
@@ -115,7 +115,7 @@ router.put('/:id', async (req, res) => {
     const insumo = await Insumo.findByPk(id);
 
     await insumo.update(changes);
-    await insumo.update({usuario:name});
+    await insumo.update({usuario:userid});
 
     return res.status(200).json(insumo);
   } catch (error) {
@@ -125,12 +125,13 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    const name = req.get("name");
+    const{ userid } = req.headers;
+    // const name = req.get("name");
     const { id } = req.params;
     const insumoABorrar = await Insumo.findByPk(id);
     if (insumoABorrar) {
       await insumoABorrar.update({
-        usuario: name,
+        usuario: userid,
       });
       await insumoABorrar.destroy();
       res.status(200).send(`El insumo de id ${id} fue borrado con éxito`);
