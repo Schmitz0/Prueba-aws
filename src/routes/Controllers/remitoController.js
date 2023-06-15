@@ -1,53 +1,52 @@
 const { Op, Sequelize } = require('sequelize');
 
-const { Router } = require("express");
-const { Insumo } = require("../../db.js");
-const { Proveedor } = require("../../db.js");
-const { Remito } = require("../../db.js");
-const { RemitoInsumo } = require("../../db.js");
+const { Router } = require('express');
+const { Insumo } = require('../../db.js');
+const { Proveedor } = require('../../db.js');
+const { Remito } = require('../../db.js');
+const { RemitoInsumo } = require('../../db.js');
 const moment = require('moment');
-
-
 
 const router = Router();
 
-router.get("/", async (req, res) => {
-
-    try {
-      const remitos = await Remito.findAll({
-        include: [{
+router.get('/', async (req, res) => {
+  try {
+    const remitos = await Remito.findAll({
+      include: [
+        {
           model: Insumo,
-          attributes: ['id', 'nombre', 'precio','usuario'],
-          through: { attributes: ['cantidad'] }
+          attributes: ['id', 'nombre', 'precio', 'usuario'],
+          through: { attributes: ['cantidad'] },
         },
         {
           model: Proveedor,
-        }],
-        order: [['createdAt', 'DESC']],
-        limit:10
-      });
-      res.json(remitos);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Error al obtener los remitos');
-    }
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+      limit: 10,
+    });
+    res.json(remitos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al obtener los remitos');
+  }
 });
 
-router.get("/:id", async (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const remito = await Remito.findByPk(id, {
       include: [
         {
           model: Insumo,
-          attributes: ["id", "nombre", "precio"],
-          through: { attributes: ["cantidad"] },
+          attributes: ['id', 'nombre', 'precio'],
+          through: { attributes: ['cantidad'] },
         },
         {
           model: Proveedor,
         },
       ],
-      order: [["createdAt", "DESC"]],
+      order: [['createdAt', 'DESC']],
     });
 
     !remito
@@ -55,21 +54,24 @@ router.get("/:id", async (req, res) => {
       : res.json(remito);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Remito no encontrado");
+    res.status(500).send('Remito no encontrado');
   }
 });
 
-router.post("/", async (req, res) => {
-
-  const name = req.get('name')
-  const { insumos, proveedorId,numeroRemito,fecha } = req.body;
+router.post('/', async (req, res) => {
+  const { userid } = req.headers;
+  // const name = req.get('name')
+  const { insumos, proveedorId, numeroRemito, fecha } = req.body;
 
   try {
+    const aux = moment(fecha, 'DD-MM-YYYY').format('YYYY-MM-DD');
 
-    const aux = moment(fecha, "DD-MM-YYYY").format("YYYY-MM-DD");
-
-    const remito = await Remito.create({ proveedorId,numeroRemito,fecha:aux });
-    await remito.update({usuario:name})
+    const remito = await Remito.create({
+      proveedorId,
+      numeroRemito,
+      fecha: aux,
+    });
+    await remito.update({ usuario: userid });
     for (const { id, cantidad, precio } of insumos) {
       const insumo = await Insumo.findByPk(id);
       let quantity = insumo.stock;
@@ -82,23 +84,23 @@ router.post("/", async (req, res) => {
     res.json(remito);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error al crear el remito");
+    res.status(500).send('Error al crear el remito');
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const remitoABorrar = await Remito.findByPk(id, {
       include: [
         {
           model: Insumo,
-          attributes: ["stock"],
+          attributes: ['stock'],
         },
       ],
     });
 
-    if(!remitoABorrar) throw new Error("El ID del remito no fue encontrado");
+    if (!remitoABorrar) throw new Error('El ID del remito no fue encontrado');
 
     const ins = remitoABorrar.Insumos;
 
@@ -115,46 +117,47 @@ router.delete("/:id", async (req, res) => {
 
     remitoABorrar.destroy();
     res.status(200).send(remitoABorrar);
-    
   } catch (error) {
     res.status(400).send(error.message);
   }
 });
 
-router.post("/filters", async (req, res) => {
+router.post('/filters', async (req, res) => {
   const { filters } = req.body;
   try {
-
-  
-    const fecha1 = moment(filters?.fechaMin, "DD-MM-YYYY").format("YYYY-MM-DD");
-    const fecha2 = moment(filters?.fechaMax, "DD-MM-YYYY").format("YYYY-MM-DD");
+    const fecha1 = moment(filters?.fechaMin, 'DD-MM-YYYY').format('YYYY-MM-DD');
+    const fecha2 = moment(filters?.fechaMax, 'DD-MM-YYYY').format('YYYY-MM-DD');
 
     const remitos = await Remito.findAll({
       where: {
-        fecha: (fecha2 && fecha1) ? {[Op.between]: [fecha1, fecha2]} : fecha2 ? {[Op.lte]: fecha2} : fecha1 ? {[Op.gte]: fecha1} : {[Op.not]: "cloudinary"}
+        fecha:
+          fecha2 && fecha1
+            ? { [Op.between]: [fecha1, fecha2] }
+            : fecha2
+            ? { [Op.lte]: fecha2 }
+            : fecha1
+            ? { [Op.gte]: fecha1 }
+            : { [Op.not]: 'cloudinary' },
       },
-      
-      include: [{
-        model: Insumo,
-        attributes: ['id', 'nombre', 'precio'],
-        through: { attributes: ['cantidad'] }
-      },
-      {
-        model: Proveedor,
-      }],
+
+      include: [
+        {
+          model: Insumo,
+          attributes: ['id', 'nombre', 'precio'],
+          through: { attributes: ['cantidad'] },
+        },
+        {
+          model: Proveedor,
+        },
+      ],
       order: [['createdAt', 'DESC']],
-      limit:10,
-     
-      }
-      );
+      limit: 10,
+    });
     res.json(remitos);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error al crear el remito");
+    res.status(500).send('Error al crear el remito');
   }
 });
-
-
-
 
 module.exports = router;
