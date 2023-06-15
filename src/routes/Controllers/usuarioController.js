@@ -82,9 +82,7 @@ router.post('/registro/:id', async (req, res) => {
     
     const movimientos = await Movimiento.findAll({
       where: {
-        usuario: {
-          [Op.eq]: id,
-        },
+        usuario: id,
       },
     });
     console.log(movimientos);
