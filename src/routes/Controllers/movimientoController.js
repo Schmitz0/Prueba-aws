@@ -58,7 +58,9 @@ router.post("/estado", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const name = req.get("name");
+  const{ userid } = req.headers;
+  // const name = req.get('name')
+  // console.log(userid);
 
   const { tipoDeMovimiento, insumos, motivo, tipo } = req.body;
   try {
@@ -86,7 +88,7 @@ router.post("/", async (req, res) => {
         });
 
         await movimiento.update({
-          usuario: name,
+          usuario: userid,
           tipoDeOperacion:tipo,
         });
       }
@@ -119,7 +121,7 @@ router.post("/", async (req, res) => {
         });
 
         await movimiento.update({
-          usuario: name,
+          usuario: userid,
           tipoDeOperacion:tipo,
         });
       }
@@ -144,7 +146,7 @@ router.post("/", async (req, res) => {
           through: { stockPrevio: quantity },
         });
         await movimiento.update({
-          usuario: name,
+          usuario: userid,
           estado: false,
         });
       }
@@ -158,11 +160,10 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/historial/:id", async (req, res) => {
-  const name = req.get("name");
+  const{ userid } = req.headers;
   const { id } = req.params; 
 
   try {
-    
       const movimiento = await Movimiento.findByPk(id,{
         include: [
           {
@@ -185,7 +186,7 @@ router.post("/historial/:id", async (req, res) => {
         });
         
         await movimiento.update({
-          usuario: name,
+          usuario: userid,
           estado: true,
         });
       }
@@ -200,7 +201,6 @@ router.post("/historial/:id", async (req, res) => {
 });
 
 router.post("/historial/control/:id", async (req, res) => {
-  const name = req.get("name");
   const { id } = req.params;
   const { InsumoId, stockFinal } = req.body;
 
@@ -233,8 +233,6 @@ router.post("/historial/control/:id", async (req, res) => {
     res.status(500).send("Error al crear el movimiento");
   }
 });
-
-
 
 
 router.post("/filters", async (req, res) => {
@@ -307,7 +305,8 @@ router.post("/filters", async (req, res) => {
 });
 
 router.post("/:id", async (req, res) => {
-  const name = req.get("name");
+  // const name = req.get("name");
+  const{ userid } = req.headers;
   const { tipoDeMovimiento, motivo, cantidadProducida } = req.body;
   const { id } = req.params;
 
@@ -316,7 +315,7 @@ router.post("/:id", async (req, res) => {
       const movimiento = await Movimiento.create({ tipoDeMovimiento, motivo });
 
       await movimiento.update({ cantidadProducida });
-      await movimiento.update({ usuario: name });
+      await movimiento.update({ usuario: userid });
       const receta = await Receta.findByPk(id, {
         include: [
           {
