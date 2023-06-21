@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
-const { Usuario, Movimiento, Insumo } = require("../../db.js");
+const { Usuario, Movimiento } = require("../../db.js");
 
 const router = Router();
 
@@ -85,7 +85,7 @@ router.post('/registro/:id', async (req, res) => {
         usuario: id,
       },
     });
-    console.log(movimientos);
+    // console.log(movimientos);
     res.json(movimientos);
   } catch (error) {
     res.status(400).send(error.message)

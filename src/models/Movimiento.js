@@ -5,7 +5,7 @@ module.exports = (sequelize) => {
     "Movimiento",
     {
       tipoDeMovimiento: {
-        type: DataTypes.ENUM("Control de stock", "Movimiento de insumo", "Receta"),
+        type: DataTypes.ENUM("Control de stock", "Movimiento de insumo", "Receta", "Modificación del insumo", "Eliminación de insumo", "Creación de insumo"),
         allowNull: false,
       },
       cantidadProducida:{
