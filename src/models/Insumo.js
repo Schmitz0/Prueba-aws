@@ -49,6 +49,9 @@ module.exports = (sequelize) => {
       usuario: {
         type: DataTypes.STRING,
       },
+      tipoDeOperacion: {
+        type: DataTypes.STRING,
+      },
     },
     {
       paranoid: true,
