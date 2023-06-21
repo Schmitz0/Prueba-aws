@@ -234,7 +234,6 @@ router.post("/historial/control/:id", async (req, res) => {
   }
 });
 
-
 router.post("/filters", async (req, res) => {
   const { filters } = req.body;
 
@@ -268,31 +267,32 @@ router.post("/filters", async (req, res) => {
       whereClause.createdAt = {
         [Op.gte]: fecha1,
       };
-    } else {
-      whereClause.createdAt = {
-        [Op.not]: "cloudinary",
-      };
     }
 
     if (filters.estado) {
       whereClause.estado = filters.estado;
     }
 
-    const movimientos = await Movimiento.findAll({
-      where: whereClause,
-      include: [
-        {
-          model: Insumo,
-          where: {
-            nombre: insumoNombre
-              ? { [Op.like]: insumoNombre }
-              : { [Op.not]: "cloudinary" },
+    const includeClause = [
+      {
+        model: MovimientoInsumo,
+      },
+    ];
+
+    if (insumoNombre) {
+      includeClause.push({
+        model: Insumo,
+        where: {
+          nombre: {
+            [Op.like]: insumoNombre,
           },
         },
-        {
-          model: MovimientoInsumo,
-        },
-      ],
+      });
+    }
+
+    const movimientos = await Movimiento.findAll({
+      where: whereClause,
+      include: includeClause,
       order: [["createdAt", "DESC"]],
       limit: 10,
     });
@@ -303,6 +303,7 @@ router.post("/filters", async (req, res) => {
     res.status(500).send("Error al crear el remito");
   }
 });
+
 
 router.post("/:id", async (req, res) => {
   // const name = req.get("name");
