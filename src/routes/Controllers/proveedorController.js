@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { Proveedor } = require("../../db.js");
+const { Proveedor, Movimiento } = require("../../db.js");
 
 const router = Router();
 
@@ -29,9 +29,17 @@ router.get("/:id", async (req, res) => {
 )
 
 router.post("/", async (req, res) => {
+    const { userid } = req.headers;
     const { nombre, nombreContacto, email, descripcion, telefono, direccion, codigoPostal} = req.body;
     try {
       const proveedor = await Proveedor.create({ nombre, nombreContacto, email, descripcion, telefono, direccion, codigoPostal });
+        
+      await Movimiento.create({
+        usuario: userid,
+        tipoDeMovimiento: "Creación de proveedor",
+        tipoDeOperacion: `Creación del nuevo proveedor ${proveedor.nombre}`
+      });
+      
       res.json(proveedor);
     } catch (error) {
       console.error(error);
@@ -41,6 +49,7 @@ router.post("/", async (req, res) => {
 )
 
 router.put('/:id', async (req, res) => {
+  const { userid } = req.headers;
   const { id } = req.params 
   const changes = {}
 
@@ -53,6 +62,13 @@ router.put('/:id', async (req, res) => {
 
       await proveedor.update(changes)
 
+      await Movimiento.create({
+        usuario: userid,
+        tipoDeMovimiento: "Edición de proveedor",
+        tipoDeOperacion: `Edición del proveedor ${proveedor.nombre}`
+      });
+      
+
       return res.status(200).json(proveedor)
 
   } catch (error) {
@@ -61,11 +77,19 @@ router.put('/:id', async (req, res) => {
 })
 
 router.delete('/:id', async (req, res) => {
+  const { userid } = req.headers;
   try {
       const { id } = req.params;
       const proveedorToDelete = await Proveedor.findByPk(id);
       if (proveedorToDelete) {
           await proveedorToDelete.destroy()
+
+          await Movimiento.create({
+            usuario: userid,
+            tipoDeMovimiento: "Eliminación de proveedor",
+            tipoDeOperacion: `Edición del proveedor ${proveedorToDelete.nombre}`
+          });
+
           res.status(200).send(`El proveedor de id ${id} fue borrado con éxito`)
       }
   } catch (error) {
