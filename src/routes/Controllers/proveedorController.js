@@ -87,7 +87,7 @@ router.delete('/:id', async (req, res) => {
           await Movimiento.create({
             usuario: userid,
             tipoDeMovimiento: "Eliminación de proveedor",
-            tipoDeOperacion: `Edición del proveedor ${proveedorToDelete.nombre}`
+            tipoDeOperacion: `Eliminación del proveedor ${proveedorToDelete.nombre}`
           });
 
           res.status(200).send(`El proveedor de id ${id} fue borrado con éxito`)
