@@ -132,6 +132,7 @@ router.put("/:id", async (req, res) => {
 });
 
 router.post("/:id", async (req, res) => {
+  const { userid } = req.headers
   const { id } = req.params;
   const data = req.body;
   const insumoId = data.idInsumoNuevo;
@@ -155,7 +156,15 @@ router.post("/:id", async (req, res) => {
       await receta.addInsumo(insumo, { through: { cantidad } });
       await receta.addInsumo(insumo, { through: { costo: costoPorBotella } });
       await receta.addInsumo(insumo, { through: { costoPorBotella } });
-    
+
+
+      await Movimiento.create({
+        usuario: userid,
+        tipoDeMovimiento: "Edición de la receta",
+        tipoDeOperacion: `Modificación/creación del insumo  ${insumo.nombre}`
+      });
+
+
     res.json(receta);
   } catch (error) {
     console.error(error);
@@ -164,12 +173,11 @@ router.post("/:id", async (req, res) => {
 });
 
 
-router.delete("/:id", async (req, res) => {
+router.delete("/insumo/:id", async (req, res) => {
+  const { userid } = req.headers
   try {
     const { id } = req.params;
     const { insumoId } = req.body;
-
-    console.log(insumoId);
 
     const receta = await Receta.findByPk(id, {
       include: [
@@ -211,11 +219,23 @@ router.delete("/:id", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
+  const { userid } = req.headers
   try {
     const { id } = req.params;
+    
     const recetaABorrar = await Receta.findByPk(id);
     if (recetaABorrar) {
       await recetaABorrar.destroy();
+
+
+      await Movimiento.create({
+        usuario: userid,
+        tipoDeMovimiento: "Eliminación de la receta",
+        tipoDeOperacion: `Eliminación de la receta  ${recetaABorrar.name}`
+      });
+
+
+
       res.status(200).send(`La receta de id ${id} fue borrada con éxito`);
     }
   } catch (error) {
