@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { Insumo } = require('../../db.js');
+const { Insumo, Movimiento } = require('../../db.js');
 const { Op, Sequelize } = require('sequelize');
 const userExtractor = require('../middleware/userExtractor.js');
 const authMiddleware = require('../middleware/userExtractor.js');
@@ -49,8 +49,7 @@ router.get('/:id', async (req, res) => {
 
 
 router.post('/', async (req, res) => {
-
-  const name = req.get('name')
+  const { userid } = req.headers;
 
   const {
     nombre,
@@ -74,7 +73,14 @@ router.post('/', async (req, res) => {
       imgUrl,
       unidad,
       categoria,
-      usuario:name,
+      // usuario:userid,
+      // tipoDeOperacion: "Creación de insumo"
+    });
+
+    await Movimiento.create({
+      usuario: userid,
+      tipoDeMovimiento: "Creación de insumo",
+      tipoDeOperacion: `Creación de un nuevo insumo ${insumo.nombre}`
     });
 
     res.json(insumo);
@@ -86,7 +92,7 @@ router.post('/', async (req, res) => {
 
 router.post('/filter', async (req, res) => {
   const { filters } = req.body;
-
+  
   try {
     const insumosData = await Insumo.findAndCountAll({
       order:(filters.orden === "desc")
@@ -101,8 +107,8 @@ router.post('/filter', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-
-  const name = req.get('name')
+  const{ userid } = req.headers;
+  // const name = req.get('name')
   const { id } = req.params;
   const changes = {};
 
@@ -115,7 +121,12 @@ router.put('/:id', async (req, res) => {
     const insumo = await Insumo.findByPk(id);
 
     await insumo.update(changes);
-    await insumo.update({usuario:name});
+    
+    await Movimiento.create({
+      usuario: userid,
+      tipoDeMovimiento: "Modificación del insumo",
+      tipoDeOperacion: `Edición de valor/es del insumo ${insumo.nombre}`
+    });
 
     return res.status(200).json(insumo);
   } catch (error) {
@@ -125,14 +136,23 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   try {
-    const name = req.get("name");
+    const{ userid } = req.headers;
+    // const name = req.get("name");
     const { id } = req.params;
     const insumoABorrar = await Insumo.findByPk(id);
     if (insumoABorrar) {
-      await insumoABorrar.update({
-        usuario: name,
-      });
+      // await insumoABorrar.update({
+      //   usuario: userid,
+      // });
       await insumoABorrar.destroy();
+
+
+      await Movimiento.create({
+        usuario: userid,
+        tipoDeMovimiento: "Eliminación de insumo",
+        tipoDeOperacion: `Borrado lógico del insumo ${insumoABorrar.nombre}`
+      });
+      
       res.status(200).send(`El insumo de id ${id} fue borrado con éxito`);
     }
   } catch (error) {

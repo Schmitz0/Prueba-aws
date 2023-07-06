@@ -1,72 +1,72 @@
-const { Router } = require("express");
-const bcrypt = require('bcrypt');
-const { Usuario } = require('../../db.js')
-const jwt = require('jsonwebtoken')
-const userExtractor = require('../middleware/userExtractor.js')
-//
-const router = Router();
+// const { Router } = require("express");
+// const bcrypt = require('bcrypt');
+// const { Usuario } = require('../../db.js')
+// const jwt = require('jsonwebtoken')
+// const userExtractor = require('../middleware/userExtractor.js')
+// //
+// const router = Router();
 
-router.get('/', userExtractor, async (req,res) => {
+// router.get('/', userExtractor, async (req,res) => {
 
-   return res.status(200).json({id: req.body.id, userRole: req.body.userRole})
+//    return res.status(200).json({id: req.body.id, userRole: req.body.userRole})
 
-})
+// })
 
-//"google-oauth2|104240256115839630283"
+// //"google-oauth2|104240256115839630283"
 
-router.post('/', async (req,res) => {
+// router.post('/', async (req,res) => {
 
-    let { email, password, name , imgUrl} = req.body;
+//     let { email, password, name , imgUrl} = req.body;
 
-    if(!email || !password || !name) return res.status(400).send("Faltan datos")
+//     if(!email || !password || !name) return res.status(400).send("Faltan datos")
 
-    if(!imgUrl){
-        imgUrl = "https://wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg";
-    }
+//     if(!imgUrl){
+//         imgUrl = "https://wellesleysocietyofartists.org/wp-content/uploads/2015/11/image-not-found.jpg";
+//     }
 
-    try {
+//     try {
 
-        const checkingUser = await Usuario.findOne({where: {email:email}})
+//         const checkingUser = await Usuario.findOne({where: {email:email}})
 
-        const userForToken = {
-            id: checkingUser.id,
-            userRole: checkingUser.role,
-            userName: checkingUser.name,
-            userEmail: checkingUser.email
-        }
+//         const userForToken = {
+//             id: checkingUser.id,
+//             userRole: checkingUser.role,
+//             userName: checkingUser.name,
+//             userEmail: checkingUser.email
+//         }
     
-        const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60 * 60 * 24 * 7})
+//         const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60 * 60 * 24 * 7})
     
-        return res.status(200).send({
-            token,
-            userRole: checkingUser.role
-        })
+//         return res.status(200).send({
+//             token,
+//             userRole: checkingUser.role
+//         })
 
-    } catch (error) {
+//     } catch (error) {
 
-        const date = new Date( Date.now() ).toString()
+//         const date = new Date( Date.now() ).toString()
 
-        const newUser = await Usuario.create({
-            email,
-            hashPassword : await bcrypt.hash(password,8),
-            name,
-            imgUrl,
-        })
+//         const newUser = await Usuario.create({
+//             email,
+//             hashPassword : await bcrypt.hash(password,8),
+//             name,
+//             imgUrl,
+//         })
     
-        const userForToken = {
-            id: newUser.id,
-            userRole: newUser.role,
-            userName: newUser.name,
-            userEmail: newUser.email
-        }
+//         const userForToken = {
+//             id: newUser.id,
+//             userRole: newUser.role,
+//             userName: newUser.name,
+//             userEmail: newUser.email
+//         }
     
-        const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60 * 60 * 24 * 7})
+//         const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60 * 60 * 24 * 7})
     
-        return res.status(200).send({
-            token,
-            userRole: newUser.role,
-        })
-    }
-})
+//         return res.status(200).send({
+//             token,
+//             userRole: newUser.role,
+//         })
+//     }
+// })
 
-module.exports = router;
+// module.exports = router;
