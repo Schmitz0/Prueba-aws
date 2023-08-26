@@ -5,9 +5,13 @@ const path = require('path');
 
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT } = process.env;
 
-const sequelize = new Sequelize('database-1.cvnpko0en2ye.sa-east-1.rds.amazonaws.com', 'postgres', 'Olivia2022!', {
-  host: 'ec2-18-231-172-249.sa-east-1.compute.amazonaws.com',
-  dialect: 'mysql', // o el dialecto de tu base de datos
+
+const sequelize = new Sequelize('database-1', 'postgres', 'Olivia2022!', {
+  host: 'database-1.cvnpko0en2ye.sa-east-1.rds.amazonaws.com',
+  dialect: 'postgres', // Cambiado a 'postgres' en lugar de 'mysql'
+  dialectOptions: {
+    ssl: 'Amazon RDS' // Agregado para usar SSL con Amazon RDS
+  }
 });
 
 
