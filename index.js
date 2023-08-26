@@ -10,7 +10,7 @@ const { crearReceta, json } = require("./src/routes/Controllers/utils.js")
 const { PORT } = process.env;
 
 conn.sync({ force: true }).then(() => {
-  server.listen(PORT, () => {
+  server.listen(5432, () => {
     console.log(`Server running...`);
 
     const insumos = [
